@@ -1132,12 +1132,15 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-    const docRef = db.collection('kitchen').doc('masterData');
+    
+    // Separated documents to avoid Firestore 1MB document size limits
+    const fridgeRef = db.collection('kitchen').doc('fridgeInventory');
+    const recipeRef = db.collection('kitchen').doc('masterbook');
 
     let recipes = [];
     let fridgeItems = [];
 
-    // --- LOCAL STORAGE RESCUE FUNCTIONS ---
+    // --- LOCAL STORAGE SCAVENGER (Finds your actual current items) ---
     function getLocalFridgeFallback() {
         for (let i = 0; i < localStorage.length; i++) {
             let key = localStorage.key(i);
@@ -1148,7 +1151,16 @@
                 } catch(e) {}
             }
         }
-        return JSON.parse(localStorage.getItem('wonderland_fridge')) || [
+        return JSON.parse(localStorage.getItem('wonderland_fridge_v13')) || 
+               JSON.parse(localStorage.getItem('wonderland_fridge_v12')) || 
+               JSON.parse(localStorage.getItem('wonderland_fridge_v11')) || 
+               JSON.parse(localStorage.getItem('wonderland_fridge_v10')) || 
+               JSON.parse(localStorage.getItem('wonderland_fridge_v9')) || 
+               JSON.parse(localStorage.getItem('wonderland_fridge_v8')) || 
+               JSON.parse(localStorage.getItem('wonderland_fridge_v7')) || 
+               JSON.parse(localStorage.getItem('wonderland_fridge_v6')) || 
+               JSON.parse(localStorage.getItem('wonderland_fridge_v5')) || 
+               JSON.parse(localStorage.getItem('wonderland_fridge')) || [
             { id: 1, name: "oil", shelf: "fridge-top" },
             { id: 4, name: "salt", shelf: "fridge-mid" },
             { id: 6, name: "rice", shelf: "pantry-grains" },
@@ -1331,49 +1343,53 @@
         ];
     }
 
-    // --- SMART MIGRATION & LIVE CLOUD SYNC ---
-    docRef.get().then((doc) => {
-        let localFridge = getLocalFridgeFallback();
-        let localRecipes = getLocalRecipesFallback();
+    // --- IMMEDIATE LOCAL LOAD + CLOUD SYNC ---
+    fridgeItems = getLocalFridgeFallback();
+    recipes = getLocalRecipesFallback();
 
-        if (!doc.exists || !doc.data().fridgeItems || doc.data().fridgeItems.length <= 4) {
-            // Cloud is unpopulated: Migrate local storage items up to Firebase cloud database!
-            recipes = localRecipes;
-            fridgeItems = localFridge;
-            saveStorage();
-        } else {
-            // Load live data from Firebase cloud
-            const data = doc.data();
-            recipes = data.recipes && data.recipes.length > 0 ? data.recipes : localRecipes;
-            fridgeItems = data.fridgeItems && data.fridgeItems.length > 0 ? data.fridgeItems : localFridge;
-            renderRecipes();
+    renderRecipes();
+    renderFridge();
+
+    // Load from Firebase cloud (or upload local data if cloud is empty)
+    fridgeRef.get().then((doc) => {
+        if (doc.exists && doc.data().items && doc.data().items.length > 0) {
+            fridgeItems = doc.data().items;
             renderFridge();
+        } else {
+            fridgeRef.set({ items: fridgeItems });
         }
-    }).catch(() => {
-        recipes = getLocalRecipesFallback();
-        fridgeItems = getLocalFridgeFallback();
-        renderRecipes();
-        renderFridge();
     });
 
-    // Real-time listener for multi-device sync
-    docRef.onSnapshot((doc) => {
-        if (doc.exists) {
-            const data = doc.data();
-            if (data.recipes) recipes = data.recipes;
-            if (data.fridgeItems) fridgeItems = data.fridgeItems;
+    recipeRef.get().then((doc) => {
+        if (doc.exists && doc.data().list && doc.data().list.length > 0) {
+            recipes = doc.data().list;
             renderRecipes();
+        } else {
+            recipeRef.set({ list: recipes });
+        }
+    });
+
+    // Real-time live listeners for multi-device sync
+    fridgeRef.onSnapshot((doc) => {
+        if (doc.exists && doc.data().items) {
+            fridgeItems = doc.data().items;
             renderFridge();
+        }
+    });
+
+    recipeRef.onSnapshot((doc) => {
+        if (doc.exists && doc.data().list) {
+            recipes = doc.data().list;
+            renderRecipes();
         }
     });
 
     function saveStorage() {
-        docRef.set({
-            recipes: recipes,
-            fridgeItems: fridgeItems
-        }).catch((error) => {
-            console.error("Error saving to Firestore: ", error);
-        });
+        fridgeRef.set({ items: fridgeItems }).catch((err) => console.error(err));
+    }
+
+    function saveRecipesStorage() {
+        recipeRef.set({ list: recipes }).catch((err) => console.error(err));
     }
 
     function switchTab(tabId) {
@@ -1652,7 +1668,7 @@
     function saveNotes(index) {
         const notesVal = document.getElementById(`recipe-notes-${index}`).value;
         recipes[index].notes = notesVal;
-        saveStorage();
+        saveRecipesStorage();
     }
 
     function saveEditedRecipe(index) {
@@ -1675,7 +1691,7 @@
             recipes[index].image = currentImageBlob;
         }
 
-        saveStorage();
+        saveRecipesStorage();
         renderRecipes();
         openRecipeModal(index, false);
         alert("Recipe updated successfully!");
@@ -1714,7 +1730,7 @@
             notes: "" 
         });
 
-        saveStorage();
+        saveRecipesStorage();
         resetRecipeForm();
         renderRecipes();
         alert("Recipe saved successfully!");
