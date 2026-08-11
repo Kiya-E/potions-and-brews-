@@ -173,9 +173,18 @@
             position: relative;
         }
 
-        .recipe-card.card-vegan { border-left-color: var(--diet-vegan); }
-        .recipe-card.card-veg { border-left-color: var(--diet-veg); }
-        .recipe-card.card-nonveg { border-left-color: var(--diet-nonveg); }
+        .recipe-card.card-vegan { 
+            border-left-color: var(--diet-vegan); 
+            background: linear-gradient(135deg, #0f172a 0%, rgba(5, 150, 105, 0.08) 100%);
+        }
+        .recipe-card.card-veg { 
+            border-left-color: var(--diet-veg); 
+            background: linear-gradient(135deg, #0f172a 0%, rgba(217, 119, 6, 0.08) 100%);
+        }
+        .recipe-card.card-nonveg { 
+            border-left-color: var(--diet-nonveg); 
+            background: linear-gradient(135deg, #0f172a 0%, rgba(220, 38, 38, 0.08) 100%);
+        }
 
         .recipe-card:hover {
             transform: translateY(-4px);
@@ -299,11 +308,10 @@
             justify-content: center;
         }
 
-        /* SQUARE MODAL COVER IMAGE */
+        /* PROPERLY SIZED MODAL COVER IMAGE */
         .modal-cover {
             width: 100%;
-            max-height: 350px;
-            aspect-ratio: 1 / 1;
+            height: 320px;
             object-fit: cover;
             border-radius: 12px;
             margin-bottom: 20px;
@@ -347,6 +355,40 @@
             margin-bottom: 15px;
         }
 
+        /* --- DRAGGABLE IMAGE CROPPER PREVIEW BOX --- */
+        .image-crop-container {
+            width: 100%;
+            height: 220px;
+            background: #0b1120;
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            cursor: grab;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-crop-container:active {
+            cursor: grabbing;
+        }
+        .image-crop-container img {
+            position: absolute;
+            width: 100%;
+            height: auto;
+            min-height: 100%;
+            object-fit: cover;
+            user-select: none;
+            pointer-events: none;
+        }
+        .crop-instructions {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
         /* --- KITCHEN STUDIO (FRIDGE & PANTRY SIDE BY SIDE) --- */
         .kitchen-studio {
             display: flex;
@@ -361,15 +403,17 @@
         .unified-scene {
             width: 100%;
             max-width: 620px;
-            height: 1150px;
+            height: auto !important;
+            min-height: 1150px;
             perspective: 3000px;
             position: relative;
-            overflow: visible;
+            overflow: visible !important;
         }
 
         .appliance-outer-body {
             width: 100%;
-            height: 100%;
+            height: auto !important;
+            min-height: 1150px;
             background: #1e293b;
             border-radius: 20px;
             border: 10px solid #475569;
@@ -381,7 +425,7 @@
             padding: 15px;
             box-sizing: border-box;
             gap: 10px;
-            overflow: visible;
+            overflow: visible !important;
         }
 
         .master-door {
@@ -500,19 +544,21 @@
             letter-spacing: 1.5px;
         }
 
-        /* --- 3D WOODEN PANTRY CUPBOARD --- */
+        /* --- 3D WOODEN PANTRY CUPBOARD SCENE --- */
         .pantry-scene {
             width: 100%;
             max-width: 420px;
-            height: 1150px;
+            height: auto !important;
+            min-height: 1150px;
             perspective: 3000px;
             position: relative;
-            overflow: visible;
+            overflow: visible !important;
         }
 
         .pantry-outer-body {
             width: 100%;
-            height: 100%;
+            height: auto !important;
+            min-height: 1150px;
             background: var(--wood-dark);
             border-radius: 20px;
             border: 10px solid #451a03;
@@ -524,7 +570,7 @@
             padding: 15px;
             box-sizing: border-box;
             gap: 10px;
-            overflow: visible;
+            overflow: visible !important;
         }
 
         .pantry-door {
@@ -566,14 +612,16 @@
             z-index: 102;
         }
 
-        /* SHELVES GROW NATURALLY WITH NO SCROLLING */
+        /* SHELVES GROW NATURALLY WITH ZERO SCROLLING */
         .pantry-shelf {
             background: #451a03;
             border-bottom: 4px solid #78350f;
-            height: auto;
-            min-height: 80px;
+            height: auto !important;
+            min-height: 90px;
+            max-height: none !important;
+            overflow: visible !important;
             border-radius: 8px;
-            padding: 18px 12px 12px 12px;
+            padding: 22px 12px 12px 12px;
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
@@ -583,7 +631,7 @@
 
         .pantry-shelf-label {
             position: absolute;
-            top: 3px;
+            top: 4px;
             right: 10px;
             font-size: 0.7rem;
             color: #d97706;
@@ -595,10 +643,12 @@
         .door-bin {
             background: rgba(15, 23, 42, 0.85);
             border: 2px solid #94a3b8;
-            height: auto;
-            min-height: 70px;
+            height: auto !important;
+            min-height: 80px;
+            max-height: none !important;
+            overflow: visible !important;
             border-radius: 6px;
-            padding: 16px 8px 8px 8px;
+            padding: 18px 8px 8px 8px;
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
@@ -621,10 +671,12 @@
         .interior-shelf {
             background: #0f172a;
             border-bottom: 4px solid #334155;
-            height: auto;
-            min-height: 80px;
+            height: auto !important;
+            min-height: 90px;
+            max-height: none !important;
+            overflow: visible !important;
             border-radius: 8px;
-            padding: 18px 12px 12px 12px;
+            padding: 22px 12px 12px 12px;
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
@@ -634,7 +686,7 @@
 
         .shelf-label {
             position: absolute;
-            top: 3px;
+            top: 4px;
             right: 10px;
             font-size: 0.7rem;
             color: #64748b;
@@ -644,12 +696,14 @@
         }
 
         .pull-drawer {
-            height: auto;
-            min-height: 90px;
+            height: auto !important;
+            min-height: 100px;
+            max-height: none !important;
+            overflow: visible !important;
             background: rgba(15, 23, 42, 0.92);
             border: 2px dashed #64748b;
             border-radius: 10px;
-            padding: 22px 10px 10px 10px;
+            padding: 24px 10px 10px 10px;
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
@@ -663,7 +717,7 @@
         .pull-drawer::before {
             content: attr(data-drawer-label);
             position: absolute;
-            top: 3px;
+            top: 4px;
             right: 10px;
             font-size: 0.7rem;
             color: var(--text-muted);
@@ -679,7 +733,7 @@
             z-index: 20;
         }
 
-        /* --- WIDER, LARGER STORAGE CONTAINERS FOR CLEAR LABELS --- */
+        /* --- WIDER, FULLY READABLE STORAGE CONTAINERS --- */
         .storage-container {
             position: relative;
             display: flex;
@@ -778,6 +832,8 @@
             width: 100%;
             white-space: normal;
             word-break: break-word;
+            overflow: visible;
+            text-overflow: clip;
             line-height: 1.15;
             margin-bottom: 3px;
         }
@@ -855,18 +911,16 @@
             <textarea id="new-instructions" rows="3" placeholder="Step-by-step instructions..."></textarea>
             
             <label style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Cover Image (Finished Dish):</label>
-            <input type="file" id="new-image" accept="image/*">
+            <input type="file" id="new-image" accept="image/*" onchange="previewNewImage(event)">
             
-            <label style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-top: 10px; margin-bottom: 6px;">Image Framing / Focus:</label>
-            <select id="new-image-position">
-                <option value="center">Center</option>
-                <option value="top">Top / Head</option>
-                <option value="bottom">Bottom</option>
-                <option value="left">Left</option>
-                <option value="right">Right</option>
-            </select>
+            <label style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-top: 12px; margin-bottom: 4px;">Drag & Position Image in Frame:</label>
+            <div class="crop-instructions">Click and drag inside the box below to frame your photo perfectly</div>
+            <div class="image-crop-container" id="new-crop-box" onmousedown="startDragging(event, 'new')" ontouchstart="startDragging(event, 'new')">
+                <img id="new-crop-img" src="" alt="Preview" style="display: none; object-position: 50% 50%;" />
+                <span id="new-crop-placeholder" style="color: var(--text-muted); font-size: 0.85rem;">Upload an image above to frame</span>
+            </div>
 
-            <button class="action-btn" style="margin-top: 10px;" onclick="addNewRecipe()">Save Recipe to Masterbook</button>
+            <button class="action-btn" style="margin-top: 15px;" onclick="addNewRecipe()">Save Recipe to Masterbook</button>
         </div>
     </div>
 
@@ -1064,7 +1118,10 @@
 </div>
 
 <script>
-    let recipes = JSON.parse(localStorage.getItem('wonderland_recipes_v8')) || 
+    let recipes = JSON.parse(localStorage.getItem('wonderland_recipes_v11')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes_v10')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes_v9')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes_v8')) || 
                   JSON.parse(localStorage.getItem('wonderland_recipes_v7')) || 
                   JSON.parse(localStorage.getItem('wonderland_recipes_v6')) || 
                   JSON.parse(localStorage.getItem('wonderland_recipes_v5')) || 
@@ -1075,7 +1132,7 @@
             ingredients: ["oil", "beansprouts", "chilli powder", "salt"], 
             instructions: "1. oil\n2. beansprouts\n3. salt\n4. chilli powder", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1084,7 +1141,7 @@
             ingredients: ["tin of sardine fish", "two chillis", "1/2 onion", "salt", "two baby potatoes", "chilli powder", "lemon"], 
             instructions: "1. slice bigger loops of onions [half an onion]\n2. long slices of chilli [two]\n3. dash in the oil from sardine\n4. throw in salt\n5. finely sliced potatoes\n6. let it all fully cook\n7. chilli powder\n8. add in sardine once potato cooked\n9. some lemon after heat is off", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1093,7 +1150,7 @@
             ingredients: ["one onion", "chillis or dry chillis", "garlic cloves", "two aubergines", "curry powder", "salt", "tarmarind", "milk"], 
             instructions: "1. onion finely diced\n2. chillis largely sliced OR dry chillis fried in oil alongside aubergine\n3. garlic diced\n4. gather these all in a saucepan and toast\n5. two aubergines finely diced\n   a. fry in separate pan un deep oil and once cooked throw in other saucepan\n6. six spoons curry powder\n7. salt\n8. puli mix\n9. start cooking\n   a. throw in some milk if you’re feeling fancy", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1110,7 +1167,7 @@
             ingredients: ["oil", "courgette", "salt", "paprika"], 
             instructions: "1. oil\n2. finely diced courgette\n3. sprinkle salt\n4. throw in a bit of paprika", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1119,7 +1176,7 @@
             ingredients: ["tuna can", "one onion", "chillis", "curry powder", "tomatoes", "seeragam", "kadugu"], 
             instructions: "1. onions, chill and dash in oil from fish tin\n2. dash seeragam, kaduvu and curry powder\n3. dash in tuna\n4. dash in water\n5. dash in tomatoes", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1128,7 +1185,6 @@
             ingredients: ["oil", "one onion", "seeragam", "kadugu", "salt", "tomato", "curry powder", "beans"], 
             instructions: "1. dash in oil\n2. dash in diced onions\n3. dash in seeragam and kadugu\n4. dash in salt\n5. dash in sliced tomato\n6. dash in curry powder\n7. dash in finely sliced beans", 
             image: "", 
-            imagePosition: "center",
             notes: "" 
         },
         { 
@@ -1145,7 +1201,7 @@
             ingredients: ["pasta", "oil", "1/2 an onion", "raw chilli powder", "tomatoes"], 
             instructions: "1. boil pasta\n2. half an onion until golden\n3. throw in some raw chilli powder\n4. add some finely sliced tomatoes until mushy sauce\n5. throw in pasta and shimmy shimmy shake", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1154,7 +1210,7 @@
             ingredients: ["oil", "chicken", "curry powder", "salt", "turmeric"], 
             instructions: "1. dash in oil\n2. dash in chicken\n3. dash in curry powder\n4. dash in salt\n5. dash in turmeric\n6. mix and cook for 30 minutes\n   * can season and marinate overnight in the fridge", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1163,7 +1219,7 @@
             ingredients: ["chicken 600g", "salt", "ginger", "turmeric", "chillis [like 25]", "one carrot", "runner beans", "one leek", "one onion", "one bell pepper", "coconut milk/milk [optional]"], 
             instructions: "1. dice the chicken and put it in a pot\n2. add salt, ginger, turmeric, lots of chillis [like 25]\n3. fill half the pot with water\n4. let it all boil for 30 mins\n5. add the carrot chunks, and beans\n6. let it all cook for another ten minutes\n7. add leeks, onions, bell pepper\n8. add coconut milk/milk", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1172,7 +1228,7 @@
             ingredients: ["oil", "one onion", "garlic cloves", "chillis", "seeragam [cumin seeds]", "kadugu [mustard seeds]", "chicken breast 1KG", "salt", "curry powder", "tomatoes"], 
             instructions: "1. dash some oil in a pan\n2. dice up one onion and dash in\n3. dash in two diced garlic cloves\n4. dash in a chillis sliced up big\n5. dash in zeedaram and kaduvu\n6. dash in diced up chicken\n7. sprinkle some salt\n8. dash in eight spoons of curry powder minimum\n9. mix mix mix\n10. dash in two tomatoes sliced finely\n11. cook for thirty minutes", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1181,7 +1237,7 @@
             ingredients: ["oil", "onion", "chillis", "bell peppers", "frozen sweetcorn", "frozen peas", "one carrot", "prawns [optional]", "turmeric powder", "salt", "lemon", "rice"], 
             instructions: "1. dash some oil in a pan\n2. chopped onions, and chilli’s dash in\n3. dash in chopped peppers, sweetcorn, peas, carrots\n   * [if feeling fancy, prawns]\n4. dash in turmeric powder, salt\n5. dash in rice\n6. dash in lemon juice", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1190,7 +1246,7 @@
             ingredients: ["two aubergine", "oil", "half an onion", "chillis", "tomatoes", "yoghurt"], 
             instructions: "1. slice up the aubergine real fine\n2. fry in oil\n3. dice up half an onion, chillis and tomatoes\n4. add in the yoghurt", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1199,7 +1255,7 @@
             ingredients: ["oil", "1/3 onion", "chillis", "one sou sou", "coconut milk"], 
             instructions: "1. dash some oil\n2. dice up onions and chillis and add\n3. slice sou sou into cubes\n4. add some coconut milk", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1208,7 +1264,7 @@
             ingredients: ["lentils", "chillis", "turmeric", "coconut milk", "garlic cloves", "salt", "onion", "seeragam [cumin seeds]", "kadugu [mustard seeds]"], 
             instructions: "1. wash lentils until water is white\n2. fill with water\n3. couple chillis\n4. turmeric powder\n5. some coconut milk\n6. dash in mushy garlic\n7. remove any yellow bubbly stuff as it cooks\n8. sprinkle some salt\n9. in a separate pan\n   a. fry some onions, kadugu, seeragam\n10. dash into main dish", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1217,7 +1273,7 @@
             ingredients: ["oil", "onion", "seeragam [cumin seeds]", "kadugu [mustard seeds]", "salt", "dried chillis", "tomatoes", "potatoes"], 
             instructions: "1. dash in oil\n2. dash in an onion diced\n3. dash in curry powder\n4. dash in seeragam and kadugu\n5. dash in salt\n6. dash in dried chillis sliced\n7. dash in sliced tomatoes\n8. mush it in until saucy\n9. dash in finely sliced potatoes\n10. dash in water\n11. mixy mix", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1226,12 +1282,15 @@
             ingredients: ["oil", "2/3 onion", "salt", "mushrooms", "curry powder", "milk", "chillis"], 
             instructions: "1. dash in oil\n2. 2/3 onion\n3. sprinkle salt\n4. dash in sliced mushrooms\n5. dash in some curry powder\n   a. if milk dish, ignore curry powder and replace with chillis\n   b. throw in some milk", 
             image: "", 
-            imagePosition: "center",
+            imagePosition: "50% 50%",
             notes: "" 
         }
     ];
 
-    let fridgeItems = JSON.parse(localStorage.getItem('wonderland_fridge_v8')) || 
+    let fridgeItems = JSON.parse(localStorage.getItem('wonderland_fridge_v11')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge_v10')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge_v9')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge_v8')) || 
                       JSON.parse(localStorage.getItem('wonderland_fridge_v7')) || 
                       JSON.parse(localStorage.getItem('wonderland_fridge_v6')) || 
                       JSON.parse(localStorage.getItem('wonderland_fridge_v5')) || 
@@ -1246,8 +1305,8 @@
     ];
 
     function saveStorage() {
-        localStorage.setItem('wonderland_recipes_v8', JSON.stringify(recipes));
-        localStorage.setItem('wonderland_fridge_v8', JSON.stringify(fridgeItems));
+        localStorage.setItem('wonderland_recipes_v11', JSON.stringify(recipes));
+        localStorage.setItem('wonderland_fridge_v11', JSON.stringify(fridgeItems));
     }
 
     function switchTab(tabId) {
@@ -1293,7 +1352,7 @@
         return match ? parseInt(match[1], 10) : 30;
     }
 
-    // --- STRICT INGREDIENT MATCHER (FIXED FOR CHICKEN & REQUIRED STOCK) ---
+    // --- STRICT INGREDIENT MATCHER ---
     function ingredientMatches(availableItem, requiredIngredient) {
         const av = availableItem.toLowerCase().trim();
         const req = requiredIngredient.toLowerCase()
@@ -1316,6 +1375,67 @@
                        avW + 'es' === reqW;
             });
         });
+    }
+
+    // --- INTERACTIVE DRAG CROPPER STATE FOR UPLOADS ---
+    let currentImageBlob = "";
+    let currentImagePos = "50% 50%";
+    let isDraggingImg = false;
+    let startX = 0, startY = 0;
+    let posX = 50, posY = 50;
+
+    function previewNewImage(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            currentImageBlob = e.target.result;
+            const imgEl = document.getElementById('new-crop-img');
+            const placeholder = document.getElementById('new-crop-placeholder');
+            imgEl.src = currentImageBlob;
+            imgEl.style.display = 'block';
+            placeholder.style.display = 'none';
+            posX = 50; posY = 50;
+            imgEl.style.objectPosition = `${posX}% ${posY}%`;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function startDragging(e, mode) {
+        if (!currentImageBlob) return;
+        isDraggingImg = true;
+        startX = e.clientX || e.touches[0].clientX;
+        startY = e.clientY || e.touches[0].clientY;
+
+        const moveHandler = (moveEvent) => {
+            if (!isDraggingImg) return;
+            const clientX = moveEvent.clientX || moveEvent.touches[0].clientX;
+            const clientY = moveEvent.clientY || moveEvent.touches[0].clientY;
+            const dx = clientX - startX;
+            const dy = clientY - startY;
+            startX = clientX;
+            startY = clientY;
+
+            posX = Math.max(0, Math.min(100, posX - dx * 0.4));
+            posY = Math.max(0, Math.min(100, posY - dy * 0.4));
+            currentImagePos = `${posX}% ${posY}%`;
+
+            const imgEl = document.getElementById(mode === 'new' ? 'new-crop-img' : 'edit-crop-img');
+            if (imgEl) imgEl.style.objectPosition = currentImagePos;
+        };
+
+        const upHandler = () => {
+            isDraggingImg = false;
+            window.removeEventListener('mousemove', moveHandler);
+            window.removeEventListener('mouseup', upHandler);
+            window.removeEventListener('touchmove', moveHandler);
+            window.removeEventListener('touchend', upHandler);
+        };
+
+        window.addEventListener('mousemove', moveHandler);
+        window.addEventListener('mouseup', upHandler);
+        window.addEventListener('touchmove', moveHandler);
+        window.addEventListener('touchend', upHandler);
     }
 
     // --- RECIPE MASTERBOOK & COOKING MODE LOGIC ---
@@ -1348,7 +1468,7 @@
         filtered.forEach((recipe) => {
             const realIdx = recipes.indexOf(recipe);
             const coverImg = recipe.image ? recipe.image : 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=600&q=80';
-            const imgPos = recipe.imagePosition || 'center';
+            const imgPos = recipe.imagePosition || '50% 50%';
             const timeText = recipe.time ? recipe.time : '30 mins';
             const diet = getDietaryType(recipe.ingredients);
             const dietClass = `diet-${diet}`;
@@ -1379,11 +1499,13 @@
         const modal = document.getElementById('recipe-modal');
         const inner = document.getElementById('modal-inner-html');
         const coverImg = recipe.image ? recipe.image : 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=600&q=80';
-        const imgPos = recipe.imagePosition || 'center';
+        const imgPos = recipe.imagePosition || '50% 50%';
         const recipeTime = recipe.time ? recipe.time : '30 mins';
         const diet = getDietaryType(recipe.ingredients);
 
         if (editMode) {
+            currentImageBlob = recipe.image || "";
+            currentImagePos = imgPos;
             inner.innerHTML = `
                 <h2>Edit Potion / Recipe</h2>
                 <label>Recipe Name:</label>
@@ -1394,16 +1516,16 @@
                 <input type="text" id="edit-ingredients" value="${recipe.ingredients.join(', ')}">
                 <label>Instructions:</label>
                 <textarea id="edit-instructions" rows="5">${recipe.instructions}</textarea>
+                
                 <label>Change Cover Image:</label>
-                <input type="file" id="edit-image" accept="image/*">
-                <label>Image Framing / Focus:</label>
-                <select id="edit-image-position">
-                    <option value="center" ${imgPos === 'center' ? 'selected' : ''}>Center</option>
-                    <option value="top" ${imgPos === 'top' ? 'selected' : ''}>Top / Head</option>
-                    <option value="bottom" ${imgPos === 'bottom' ? 'selected' : ''}>Bottom</option>
-                    <option value="left" ${imgPos === 'left' ? 'selected' : ''}>Left</option>
-                    <option value="right" ${imgPos === 'right' ? 'selected' : ''}>Right</option>
-                </select>
+                <input type="file" id="edit-image" accept="image/*" onchange="previewEditImage(event)">
+                
+                <label style="margin-top: 10px; display: block;">Drag & Position Image in Frame:</label>
+                <div class="crop-instructions">Click and drag inside the box below to frame your photo perfectly</div>
+                <div class="image-crop-container" id="edit-crop-box" onmousedown="startDragging(event, 'edit')" ontouchstart="startDragging(event, 'edit')">
+                    <img id="edit-crop-img" src="${coverImg}" alt="Preview" style="object-position: ${imgPos};" />
+                </div>
+
                 <button class="action-btn" style="margin-top: 15px;" onclick="saveEditedRecipe(${index})">Save Changes</button>
                 <button class="edit-toggle-btn" style="background:#64748b; margin-top:10px;" onclick="openRecipeModal(${index}, false)">Cancel</button>
             `;
@@ -1439,6 +1561,21 @@
         modal.classList.add('active');
     }
 
+    function previewEditImage(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            currentImageBlob = e.target.result;
+            const imgEl = document.getElementById('edit-crop-img');
+            imgEl.src = currentImageBlob;
+            posX = 50; posY = 50;
+            currentImagePos = "50% 50%";
+            imgEl.style.objectPosition = currentImagePos;
+        };
+        reader.readAsDataURL(file);
+    }
+
     function toggleCheck(recipeIdx, ingIdx) {
         const label = document.getElementById(`check-label-${recipeIdx}-${ingIdx}`);
         label.classList.toggle('checked');
@@ -1455,8 +1592,6 @@
         const timeVal = document.getElementById('edit-time').value.trim();
         const ingredientsRaw = document.getElementById('edit-ingredients').value.trim();
         const instructions = document.getElementById('edit-instructions').value.trim();
-        const imagePosition = document.getElementById('edit-image-position').value;
-        const imageFile = document.getElementById('edit-image').files[0];
 
         if (!name || !ingredientsRaw) {
             alert("Name and ingredients cannot be empty!");
@@ -1467,24 +1602,15 @@
         recipes[index].time = timeVal || '30 mins';
         recipes[index].ingredients = ingredientsRaw.toLowerCase().split(',').map(i => i.trim()).filter(i => i);
         recipes[index].instructions = instructions;
-        recipes[index].imagePosition = imagePosition;
-
-        if (imageFile) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                recipes[index].image = e.target.result;
-                saveStorage();
-                renderRecipes();
-                openRecipeModal(index, false);
-                alert("Recipe updated successfully!");
-            };
-            reader.readAsDataURL(imageFile);
-        } else {
-            saveStorage();
-            renderRecipes();
-            openRecipeModal(index, false);
-            alert("Recipe updated successfully!");
+        recipes[index].imagePosition = currentImagePos;
+        if (currentImageBlob) {
+            recipes[index].image = currentImageBlob;
         }
+
+        saveStorage();
+        renderRecipes();
+        openRecipeModal(index, false);
+        alert("Recipe updated successfully!");
     }
 
     function closeRecipeModal(e) {
@@ -1502,8 +1628,6 @@
         const timeVal = document.getElementById('new-time').value.trim();
         const ingredientsRaw = document.getElementById('new-ingredients').value.trim();
         const instructions = document.getElementById('new-instructions').value.trim();
-        const imagePosition = document.getElementById('new-image-position').value;
-        const imageFile = document.getElementById('new-image').files[0];
 
         if (!name || !ingredientsRaw) {
             alert("Please provide at least a recipe name and ingredients!");
@@ -1512,23 +1636,20 @@
 
         const ingredients = ingredientsRaw.toLowerCase().split(',').map(i => i.trim()).filter(i => i);
 
-        if (imageFile) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                recipes.push({ name, time: timeVal || '30 mins', ingredients, instructions, image: e.target.result, imagePosition, notes: "" });
-                saveStorage();
-                resetRecipeForm();
-                renderRecipes();
-                alert("Recipe saved successfully with cover image!");
-            };
-            reader.readAsDataURL(imageFile);
-        } else {
-            recipes.push({ name, time: timeVal || '30 mins', ingredients, instructions, image: "", imagePosition, notes: "" });
-            saveStorage();
-            resetRecipeForm();
-            renderRecipes();
-            alert("Recipe saved successfully!");
-        }
+        recipes.push({ 
+            name, 
+            time: timeVal || '30 mins', 
+            ingredients, 
+            instructions, 
+            image: currentImageBlob, 
+            imagePosition: currentImagePos, 
+            notes: "" 
+        });
+
+        saveStorage();
+        resetRecipeForm();
+        renderRecipes();
+        alert("Recipe saved successfully!");
     }
 
     function resetRecipeForm() {
@@ -1537,6 +1658,12 @@
         document.getElementById('new-ingredients').value = '';
         document.getElementById('new-instructions').value = '';
         document.getElementById('new-image').value = '';
+        const imgEl = document.getElementById('new-crop-img');
+        const placeholder = document.getElementById('new-crop-placeholder');
+        imgEl.style.display = 'none';
+        placeholder.style.display = 'block';
+        currentImageBlob = "";
+        currentImagePos = "50% 50%";
     }
 
     // --- 3D INTERACTION LOGIC ---
@@ -1648,7 +1775,7 @@
         });
     }
 
-    // --- SOUS CHEF LOGIC (STRICT INGREDIENT CHECKING) ---
+    // --- SOUS CHEF LOGIC ---
     function renderSousChef() {
         const availableIngredients = fridgeItems.map(i => i.name.toLowerCase());
         const possibleContainer = document.getElementById('possible-recipes-container');
@@ -1656,11 +1783,9 @@
         const possibleRecipes = recipes.filter(recipe => {
             const missing = recipe.ingredients.filter(ing => {
                 const lowerIng = ing.toLowerCase();
-                // Check if optional
                 if (lowerIng.includes('optional') || lowerIng.includes('[optional]')) {
                     return false;
                 }
-                // Check if available in stock
                 const isAvailable = availableIngredients.some(a => ingredientMatches(a, ing));
                 return !isAvailable;
             });
@@ -1676,7 +1801,7 @@
         possibleRecipes.forEach(recipe => {
             const realIdx = recipes.indexOf(recipe);
             const coverImg = recipe.image ? recipe.image : 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=600&q=80';
-            const imgPos = recipe.imagePosition || 'center';
+            const imgPos = recipe.imagePosition || '50% 50%';
             const timeText = recipe.time ? recipe.time : '30 mins';
             const diet = getDietaryType(recipe.ingredients);
             const dietClass = `diet-${diet}`;
@@ -1727,7 +1852,7 @@
         const chosen = possibleRecipes[randomIndex];
         const realIdx = recipes.indexOf(chosen);
         const coverImg = chosen.image ? chosen.image : 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=600&q=80';
-        const imgPos = chosen.imagePosition || 'center';
+        const imgPos = chosen.imagePosition || '50% 50%';
         const timeText = chosen.time ? chosen.time : '30 mins';
         const diet = getDietaryType(chosen.ingredients);
 
