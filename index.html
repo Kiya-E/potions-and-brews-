@@ -420,6 +420,7 @@
             z-index: 2;
         }
 
+        /* Inside of door: restricted to height above freezer so bins stop correctly */
         .door-back {
             background: linear-gradient(135deg, #475569 0%, #334155 100%);
             border: 6px solid #64748b;
@@ -1054,7 +1055,9 @@
 </div>
 
 <script>
-    let recipes = JSON.parse(localStorage.getItem('wonderland_recipes_v5')) || [
+    let recipes = JSON.parse(localStorage.getItem('wonderland_recipes_v6')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes_v5')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes')) || [
         { 
             name: "BEANSPROUTS", 
             time: "15 mins", 
@@ -1201,7 +1204,9 @@
         }
     ];
 
-    let fridgeItems = JSON.parse(localStorage.getItem('wonderland_fridge')) || [
+    let fridgeItems = JSON.parse(localStorage.getItem('wonderland_fridge_v6')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge_v5')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge')) || [
         { id: 1, name: "oil", shelf: "fridge-top" },
         { id: 2, name: "apple", shelf: "crisper1" },
         { id: 3, name: "banana", shelf: "crisper1" },
@@ -1212,8 +1217,8 @@
     ];
 
     function saveStorage() {
-        localStorage.setItem('wonderland_recipes_v5', JSON.stringify(recipes));
-        localStorage.setItem('wonderland_fridge', JSON.stringify(fridgeItems));
+        localStorage.setItem('wonderland_recipes_v6', JSON.stringify(recipes));
+        localStorage.setItem('wonderland_fridge_v6', JSON.stringify(fridgeItems));
     }
 
     function switchTab(tabId) {
@@ -1603,7 +1608,14 @@
         const possibleContainer = document.getElementById('possible-recipes-container');
         
         const possibleRecipes = recipes.filter(recipe => {
-            const missing = recipe.ingredients.filter(ing => !availableIngredients.some(a => ingredientMatches(a, ing)));
+            const missing = recipe.ingredients.filter(ing => {
+                const lowerIng = ing.toLowerCase();
+                // Ignore optional ingredients so they don't block the recipe from showing
+                if (lowerIng.includes('optional') || lowerIng.includes('[optional]')) {
+                    return false;
+                }
+                return !availableIngredients.some(a => ingredientMatches(a, ing));
+            });
             return missing.length === 0;
         });
 
@@ -1645,7 +1657,13 @@
     function pickForMe() {
         const availableIngredients = fridgeItems.map(i => i.name.toLowerCase());
         const possibleRecipes = recipes.filter(recipe => {
-            const missing = recipe.ingredients.filter(ing => !availableIngredients.some(a => ingredientMatches(a, ing)));
+            const missing = recipe.ingredients.filter(ing => {
+                const lowerIng = ing.toLowerCase();
+                if (lowerIng.includes('optional') || lowerIng.includes('[optional]')) {
+                    return false;
+                }
+                return !availableIngredients.some(a => ingredientMatches(a, ing));
+            });
             return missing.length === 0;
         });
 
