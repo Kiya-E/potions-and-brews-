@@ -460,7 +460,6 @@
             padding-right: 4px;
         }
 
-        /* Varied quote card styling for different sizes/accents */
         .door-quote-card {
             background: rgba(15, 23, 42, 0.55);
             border-left: 3px solid var(--primary);
@@ -679,47 +678,117 @@
             z-index: 20;
         }
 
-        .food-item-node {
-            background: rgba(51, 65, 85, 0.7);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            padding: 6px;
+        /* --- VARYING STORAGE CONTAINER STYLES (JARS, BOWLS, BOXES, BOTTLES, TUBS) --- */
+        .storage-container {
+            position: relative;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            padding: 6px 10px;
             cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: transform 0.2s, filter 0.2s;
             animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: transform 0.2s, background 0.2s;
-            width: 48px;
-            height: 48px;
         }
 
-        .food-item-node:hover {
-            background: var(--danger);
-            border-color: var(--danger);
-            transform: scale(1.15) rotate(4deg);
+        .storage-container:hover {
+            transform: scale(1.1) translateY(-3px);
+            filter: brightness(1.2);
+            z-index: 50;
         }
 
-        .drawing-box {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
+        .container-jar {
+            border-radius: 10px 10px 20px 20px;
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            border: 2px solid #38bdf8;
+            min-width: 60px;
+        }
+        .container-jar::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            width: 50%;
+            height: 5px;
+            background: #94a3b8;
+            border-radius: 2px;
         }
 
-        .drawing-box svg {
+        .container-bottle {
+            border-radius: 14px 14px 6px 6px;
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            border: 2px solid #4ade80;
+            width: 42px;
+        }
+        .container-bottle::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            width: 35%;
+            height: 8px;
+            background: #cbd5e1;
+            border-radius: 2px;
+        }
+
+        .container-box {
+            border-radius: 6px;
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            border: 2px solid #fcd34d;
+            min-width: 65px;
+        }
+        .container-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
             width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4));
-            animation: floatWiggle 3s ease-in-out infinite;
+            height: 4px;
+            background: rgba(0,0,0,0.3);
         }
 
-        @keyframes floatWiggle {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-2px) rotate(3deg); }
+        .container-bowl {
+            border-radius: 4px 4px 25px 25px;
+            background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
+            border: 2px solid #c084fc;
+            min-width: 68px;
+        }
+
+        .container-tub {
+            border-radius: 12px;
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            border: 2px solid #f87171;
+            min-width: 62px;
+        }
+        .container-tub::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            width: 80%;
+            height: 4px;
+            background: #fca5a5;
+            border-radius: 2px;
+        }
+
+        .container-label {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            text-align: center;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .container-qty {
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: #fef08a;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0 5px;
+            border-radius: 8px;
+            margin-top: 2px;
         }
 
         @keyframes popIn {
@@ -827,14 +896,14 @@
         </div>
 
         <div class="card">
-            <h2>🧊 Kitchen Units (Fridge & Wooden Pantry) <span style="font-size: 0.75rem; color: var(--text-muted);">(Click doors to open • Click drawers to pull out • Click to consume)</span></h2>
+            <h2>🧊 Kitchen Units (Fridge & Wooden Pantry) <span style="font-size: 0.75rem; color: var(--text-muted);">(Click doors to open • Click drawers to pull out • Click container to consume 1)</span></h2>
             
             <div class="kitchen-studio">
                 <!-- 3D FRIDGE SCENE -->
                 <div class="unified-scene">
                     <div class="appliance-outer-body">
                         <div class="master-door" id="master-door" onclick="toggleMasterDoor(event)">
-                            <!-- FRONT OF DOOR: ALL QUOTES WITH NEW ADDITIONS -->
+                            <!-- FRONT OF DOOR: ALL QUOTES WITH VARIED SIZES -->
                             <div class="door-front">
                                 <div class="door-quotes-container">
                                     <div class="door-quote-card large">
@@ -1452,7 +1521,7 @@
         renderFridge();
     }
 
-    // --- RENDER FRIDGE & PANTRY (COLORED DRAWINGS FOR ITEMS) ---
+    // --- RENDER SHELF CONTAINERS (JARS, BOWLS, BOXES, BOTTLES, TUBS) ---
     function renderFridge() {
         const containerIds = [
             'shelf-fridge-top', 'shelf-fridge-wire', 'shelf-fridge-mid',
@@ -1471,27 +1540,39 @@
             }
         });
 
+        let shelfMap = {};
         fridgeItems.forEach(item => {
-            let target = document.getElementById(item.shelf) || document.getElementById(`drawer-${item.shelf}`) || document.getElementById(`shelf-${item.shelf}`);
-            if (target) {
-                const node = document.createElement('div');
-                node.className = 'food-item-node';
-                node.title = item.name.toUpperCase();
-                
-                let svg = `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="20" fill="#ec4899"/><path d="M22 32 L42 32 M32 22 L32 42" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/></svg>`;
-                const name = item.name.toLowerCase();
-                if (name.includes('apple')) svg = `<svg viewBox="0 0 64 64"><path d="M32 16 C22 12 16 24 16 36 C16 48 24 56 32 56 C40 56 48 48 48 36 C48 24 42 12 32 16 Z" fill="#ef4444"/><path d="M32 16 C32 8 36 4 40 2" stroke="#16a34a" stroke-width="3" stroke-linecap="round" fill="none"/></svg>`;
-                else if (name.includes('banana')) svg = `<svg viewBox="0 0 64 64"><path d="M16 48 C20 32 32 20 48 16 C46 26 38 40 24 50 C20 52 16 50 16 48 Z" fill="#facc15"/></svg>`;
-                else if (name.includes('salt')) svg = `<svg viewBox="0 0 64 64"><rect x="22" y="20" width="20" height="34" fill="#f8fafc" rx="4"/><ellipse cx="32" cy="20" rx="10" ry="4" fill="#cbd5e1"/></svg>`;
-                else if (name.includes('rice') || name.includes('flour') || name.includes('lentil')) svg = `<svg viewBox="0 0 64 64"><path d="M16 28 C16 20 48 20 48 28 L44 52 C44 56 38 58 32 58 C26 58 20 56 20 52 Z" fill="#f8fafc"/></svg>`;
-                else if (name.includes('oil')) svg = `<svg viewBox="0 0 64 64"><rect x="24" y="16" width="16" height="8" fill="#94a3b8" rx="2"/><path d="M22 24 L42 24 L46 56 C46 60 42 62 38 62 L26 62 C22 62 18 60 18 56 Z" fill="#facc15"/></svg>`;
+            if (!shelfMap[item.shelf]) shelfMap[item.shelf] = {};
+            if (!shelfMap[item.shelf][item.name]) shelfMap[item.shelf][item.name] = [];
+            shelfMap[item.shelf][item.name].push(item);
+        });
 
-                node.innerHTML = `<div class="drawing-box">${svg}</div>`;
-                node.onclick = (e) => {
-                    e.stopPropagation();
-                    deleteFridgeItem(item.id);
-                };
-                target.appendChild(node);
+        const shapeClasses = ['container-jar', 'container-bottle', 'container-box', 'container-bowl', 'container-tub'];
+
+        Object.keys(shelfMap).forEach(shelfId => {
+            let target = document.getElementById(shelfId) || document.getElementById(`drawer-${shelfId}`) || document.getElementById(`shelf-${shelfId}`);
+            if (target) {
+                Object.keys(shelfMap[shelfId]).forEach((name, idx) => {
+                    let group = shelfMap[shelfId][name];
+                    let qty = group.length;
+
+                    const node = document.createElement('div');
+                    node.className = `storage-container ${shapeClasses[idx % shapeClasses.length]}`;
+                    
+                    node.title = `${name.toUpperCase()} (Qty: ${qty}) - Click to consume 1`;
+                    node.innerHTML = `
+                        <div class="container-label">${name}</div>
+                        <div class="container-qty">x${qty}</div>
+                    `;
+
+                    node.onclick = (e) => {
+                        e.stopPropagation();
+                        let itemToDelete = group[0];
+                        deleteFridgeItem(itemToDelete.id);
+                    };
+
+                    target.appendChild(node);
+                });
             }
         });
     }
