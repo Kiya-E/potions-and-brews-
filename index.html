@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>✨ Potions and Brews Masterbook & Kitchen</title>
+    
+    <!-- Firebase App & Firestore SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --bg-color: #0f172a;
@@ -191,7 +196,6 @@
             border-color: var(--primary);
         }
 
-        /* SQUARE COVER IMAGE */
         .recipe-cover {
             width: 100%;
             aspect-ratio: 1 / 1;
@@ -308,7 +312,6 @@
             justify-content: center;
         }
 
-        /* PROPERLY SIZED MODAL COVER IMAGE */
         .modal-cover {
             width: 100%;
             height: 320px;
@@ -389,7 +392,7 @@
             text-align: center;
         }
 
-        /* --- KITCHEN STUDIO (FRIDGE & PANTRY SIDE BY SIDE) --- */
+        /* --- KITCHEN STUDIO --- */
         .kitchen-studio {
             display: flex;
             gap: 40px;
@@ -399,7 +402,6 @@
             padding: 20px 0;
         }
 
-        /* --- 3D APPLIANCE MODEL SCENE --- */
         .unified-scene {
             width: 100%;
             max-width: 620px;
@@ -612,7 +614,6 @@
             z-index: 102;
         }
 
-        /* SHELVES GROW NATURALLY WITH ZERO SCROLLING */
         .pantry-shelf {
             background: #451a03;
             border-bottom: 4px solid #78350f;
@@ -733,7 +734,7 @@
             z-index: 20;
         }
 
-        /* --- WIDER, FULLY READABLE STORAGE CONTAINERS --- */
+        /* --- WIDER STORAGE CONTAINERS --- */
         .storage-container {
             position: relative;
             display: flex;
@@ -1118,14 +1119,22 @@
 </div>
 
 <script>
-    let recipes = JSON.parse(localStorage.getItem('wonderland_recipes_v11')) || 
-                  JSON.parse(localStorage.getItem('wonderland_recipes_v10')) || 
-                  JSON.parse(localStorage.getItem('wonderland_recipes_v9')) || 
-                  JSON.parse(localStorage.getItem('wonderland_recipes_v8')) || 
-                  JSON.parse(localStorage.getItem('wonderland_recipes_v7')) || 
-                  JSON.parse(localStorage.getItem('wonderland_recipes_v6')) || 
-                  JSON.parse(localStorage.getItem('wonderland_recipes_v5')) || 
-                  JSON.parse(localStorage.getItem('wonderland_recipes')) || [
+    // --- FIREBASE CONFIGURATION ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBuEH_AWfYeHxUNGV6nSInKqvXgdlMETlc",
+        authDomain: "brews-and-potions.firebaseapp.com",
+        projectId: "brews-and-potions",
+        storageBucket: "brews-and-potions.firebasestorage.app",
+        messagingSenderId: "457118780956",
+        appId: "1:457118780956:web:2980d589c2b2a173c619d9",
+        measurementId: "G-PS2QT6BY7P"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let recipes = [
         { 
             name: "BEANSPROUTS", 
             time: "15 mins", 
@@ -1159,6 +1168,7 @@
             ingredients: ["oil", "2/3 onion", "salt", "chillis", "some potatoes", "leeks", "milk"], 
             instructions: "1. oil\n2. onion finely diced\n3. some chillis sliced lanky ways\n4. dash in some salt\n5. add some finely diced potatoes\n6. wait for the potatoes to cook fully\n7. throw in the leeks, finely sliced\n   a. throw in some milk or single cream if you’re feeling fancy", 
             image: "", 
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1185,6 +1195,7 @@
             ingredients: ["oil", "one onion", "seeragam", "kadugu", "salt", "tomato", "curry powder", "beans"], 
             instructions: "1. dash in oil\n2. dash in diced onions\n3. dash in seeragam and kadugu\n4. dash in salt\n5. dash in sliced tomato\n6. dash in curry powder\n7. dash in finely sliced beans", 
             image: "", 
+            imagePosition: "50% 50%",
             notes: "" 
         },
         { 
@@ -1287,14 +1298,7 @@
         }
     ];
 
-    let fridgeItems = JSON.parse(localStorage.getItem('wonderland_fridge_v11')) || 
-                      JSON.parse(localStorage.getItem('wonderland_fridge_v10')) || 
-                      JSON.parse(localStorage.getItem('wonderland_fridge_v9')) || 
-                      JSON.parse(localStorage.getItem('wonderland_fridge_v8')) || 
-                      JSON.parse(localStorage.getItem('wonderland_fridge_v7')) || 
-                      JSON.parse(localStorage.getItem('wonderland_fridge_v6')) || 
-                      JSON.parse(localStorage.getItem('wonderland_fridge_v5')) || 
-                      JSON.parse(localStorage.getItem('wonderland_fridge')) || [
+    let fridgeItems = [
         { id: 1, name: "oil", shelf: "fridge-top" },
         { id: 2, name: "apple", shelf: "crisper1" },
         { id: 3, name: "banana", shelf: "crisper1" },
@@ -1304,9 +1308,28 @@
         { id: 7, name: "flour", shelf: "pantry-grains" }
     ];
 
+    // --- REAL-TIME CLOUD SYNC WITH FIRESTORE ---
+    const docRef = db.collection('kitchen').doc('masterData');
+
+    docRef.onSnapshot((doc) => {
+        if (doc.exists) {
+            const data = doc.data();
+            if (data.recipes) recipes = data.recipes;
+            if (data.fridgeItems) fridgeItems = data.fridgeItems;
+            renderRecipes();
+            renderFridge();
+        } else {
+            saveStorage();
+        }
+    });
+
     function saveStorage() {
-        localStorage.setItem('wonderland_recipes_v11', JSON.stringify(recipes));
-        localStorage.setItem('wonderland_fridge_v11', JSON.stringify(fridgeItems));
+        docRef.set({
+            recipes: recipes,
+            fridgeItems: fridgeItems
+        }).catch((error) => {
+            console.error("Error saving to Firestore: ", error);
+        });
     }
 
     function switchTab(tabId) {
@@ -1396,7 +1419,8 @@
             imgEl.style.display = 'block';
             placeholder.style.display = 'none';
             posX = 50; posY = 50;
-            imgEl.style.objectPosition = `${posX}% ${posY}%`;
+            currentImagePos = `${posX}% ${posY}%`;
+            imgEl.style.objectPosition = currentImagePos;
         };
         reader.readAsDataURL(file);
     }
@@ -1416,8 +1440,8 @@
             startX = clientX;
             startY = clientY;
 
-            posX = Math.max(0, Math.min(100, posX - dx * 0.4));
-            posY = Math.max(0, Math.min(100, posY - dy * 0.4));
+            posX = Math.max(0, Math.min(100, posX - dx * 0.3));
+            posY = Math.max(0, Math.min(100, posY - dy * 0.3));
             currentImagePos = `${posX}% ${posY}%`;
 
             const imgEl = document.getElementById(mode === 'new' ? 'new-crop-img' : 'edit-crop-img');
