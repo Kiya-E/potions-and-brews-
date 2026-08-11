@@ -1137,7 +1137,7 @@
     let recipes = [];
     let fridgeItems = [];
 
-    // --- FALLBACK SCAVENGER FOR LOCAL STORAGE ---
+    // --- LOCAL STORAGE RESCUE FUNCTIONS ---
     function getLocalFridgeFallback() {
         for (let i = 0; i < localStorage.length; i++) {
             let key = localStorage.key(i);
@@ -1148,7 +1148,7 @@
                 } catch(e) {}
             }
         }
-        return [
+        return JSON.parse(localStorage.getItem('wonderland_fridge')) || [
             { id: 1, name: "oil", shelf: "fridge-top" },
             { id: 4, name: "salt", shelf: "fridge-mid" },
             { id: 6, name: "rice", shelf: "pantry-grains" },
@@ -1321,42 +1321,42 @@
             },
             { 
                 name: "MUSHROOM CURRY - variation", 
-            time: "25 mins", 
-            ingredients: ["oil", "2/3 onion", "salt", "mushrooms", "curry powder", "milk", "chillis"], 
-            instructions: "1. dash in oil\n2. 2/3 onion\n3. sprinkle salt\n4. dash in sliced mushrooms\n5. dash in some curry powder\n   a. if milk dish, ignore curry powder and replace with chillis\n   b. throw in some milk", 
-            image: "", 
-            imagePosition: "50% 50%",
-            notes: "" 
-        }
-    ];
-}
+                time: "25 mins", 
+                ingredients: ["oil", "2/3 onion", "salt", "mushrooms", "curry powder", "milk", "chillis"], 
+                instructions: "1. dash in oil\n2. 2/3 onion\n3. sprinkle salt\n4. dash in sliced mushrooms\n5. dash in some curry powder\n   a. if milk dish, ignore curry powder and replace with chillis\n   b. throw in some milk", 
+                image: "", 
+                imagePosition: "50% 50%",
+                notes: "" 
+            }
+        ];
+    }
 
-    // Smart sync logic: Fetch from Firebase, or upload local data if Firebase is empty
+    // --- SMART MIGRATION & LIVE CLOUD SYNC ---
     docRef.get().then((doc) => {
         let localFridge = getLocalFridgeFallback();
         let localRecipes = getLocalRecipesFallback();
 
         if (!doc.exists || !doc.data().fridgeItems || doc.data().fridgeItems.length <= 4) {
-            // Push your saved local items to Firebase Cloud!
+            // Cloud is unpopulated: Migrate local storage items up to Firebase cloud database!
             recipes = localRecipes;
             fridgeItems = localFridge;
             saveStorage();
         } else {
+            // Load live data from Firebase cloud
             const data = doc.data();
             recipes = data.recipes && data.recipes.length > 0 ? data.recipes : localRecipes;
             fridgeItems = data.fridgeItems && data.fridgeItems.length > 0 ? data.fridgeItems : localFridge;
             renderRecipes();
             renderFridge();
         }
-    }).catch((err) => {
-        console.error("Firestore get error: ", err);
+    }).catch(() => {
         recipes = getLocalRecipesFallback();
         fridgeItems = getLocalFridgeFallback();
         renderRecipes();
         renderFridge();
     });
 
-    // Real-time listener for live sync across devices
+    // Real-time listener for multi-device sync
     docRef.onSnapshot((doc) => {
         if (doc.exists) {
             const data = doc.data();
