@@ -1134,7 +1134,10 @@
     const db = firebase.firestore();
     const docRef = db.collection('kitchen').doc('masterData');
 
-    // --- AUTOMATIC LOCALSTORAGE RECOVERY & CLOUD MIGRATION ---
+    let recipes = [];
+    let fridgeItems = [];
+
+    // --- FALLBACK SCAVENGER FOR LOCAL STORAGE ---
     function getLocalFridgeFallback() {
         for (let i = 0; i < localStorage.length; i++) {
             let key = localStorage.key(i);
@@ -1145,7 +1148,7 @@
                 } catch(e) {}
             }
         }
-        return [
+        return JSON.parse(localStorage.getItem('wonderland_fridge')) || [
             { id: 1, name: "oil", shelf: "fridge-top" },
             { id: 4, name: "salt", shelf: "fridge-mid" },
             { id: 6, name: "rice", shelf: "pantry-grains" },
@@ -1328,18 +1331,15 @@
         ];
     }
 
-    let recipes = [];
-    let fridgeItems = [];
-
-    // --- REAL-TIME CLOUD SYNC & MIGRATION ---
+    // --- SMART CLOUD INITIALIZATION & MIGRATION ---
     docRef.get().then((doc) => {
         if (!doc.exists || !doc.data().fridgeItems || doc.data().fridgeItems.length === 0) {
-            // First time connecting or empty cloud: Migrate local storage data into Firebase!
+            // Cloud is empty: Rescue local items and push them to Firebase!
             recipes = getLocalRecipesFallback();
             fridgeItems = getLocalFridgeFallback();
             saveStorage();
         } else {
-            // Load live data from Firebase
+            // Load live cloud data
             const data = doc.data();
             recipes = data.recipes || getLocalRecipesFallback();
             fridgeItems = data.fridgeItems || getLocalFridgeFallback();
@@ -1353,6 +1353,7 @@
         renderFridge();
     });
 
+    // Real-time listener across devices
     docRef.onSnapshot((doc) => {
         if (doc.exists) {
             const data = doc.data();
@@ -1939,10 +1940,6 @@
             </div>
         `;
     }
-
-    // Initial boot
-    renderRecipes();
-    renderFridge();
 </script>
 
 </body>
