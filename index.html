@@ -910,11 +910,11 @@
                                         <cite>— Before the Coffee Gets Cold</cite>
                                     </div>
                                     <div class="door-quote-card large">
-                                        “Most of all, I hate you because I think of you so often.”
+                                        “I was filled with a terrible, dark joy.”
                                         <cite>— The Cruel Prince</cite>
                                     </div>
                                     <div class="door-quote-card medium">
-                                        “If I cannot be better than them, I will become so much worse.”
+                                        “I am no longer a helpless human child. I am a terror in the dark.”
                                         <cite>— The Cruel Prince</cite>
                                     </div>
                                 </div>
@@ -987,24 +987,150 @@
 
 <script>
     let recipes = JSON.parse(localStorage.getItem('wonderland_recipes')) || [
-        { name: "BEANSPROUTS", time: "15 mins", ingredients: ["oil", "beansprouts", "chilli powder", "salt"], instructions: "1. oil\n2. beansprouts\n3. salt\n4. chilli powder", image: "", notes: "" },
-        { name: "SARDINE DISH", time: "25 mins", ingredients: ["tin of sardine fish", "two chillis", "1/2 onion", "salt", "two baby potatoes", "chilli powder", "lemon"], instructions: "1. slice onions & chillis\n2. dash sardine oil & salt\n3. cook potatoes and add sardine + lemon", image: "", notes: "" },
-        { name: "AUBERGINE CURRY", time: "40 mins", ingredients: ["one onion", "chillis", "garlic cloves", "two aubergines", "curry powder", "salt", "tarmarind", "milk"], instructions: "1. fry aubergines\n2. toast onion & garlic\n3. add curry powder, salt, puli mix & milk", image: "", notes: "" },
-        { name: "LEEKS DISH", time: "30 mins", ingredients: ["oil", "2/3 onion", "salt", "chillis", "some potatoes", "leeks", "milk"], instructions: "1. fry onions & chillis\n2. cook potatoes fully\n3. throw in leeks and milk/cream", image: "", notes: "" },
-        { name: "COURGETTE DISH", time: "20 mins", ingredients: ["oil", "courgette", "salt", "paprika"], instructions: "1. oil\n2. finely diced courgette\n3. sprinkle salt and paprika", image: "", notes: "" },
-        { name: "TUNA CURRY", time: "30 mins", ingredients: ["tuna can", "one onion", "chillis", "curry powder", "tomatoes", "seeragam", "kadugu"], instructions: "1. sauté onions, chilli in fish oil\n2. add seeds, curry powder, tuna & tomatoes", image: "", notes: "" },
-        { name: "BEANS", time: "25 mins", ingredients: ["oil", "one onion", "seeragam", "kadugu", "salt", "tomato", "curry powder", "beans"], instructions: "1. temper seeds & onions\n2. add salt, tomato, curry powder & beans", image: "", notes: "" },
-        { name: "IDIYAPAM", time: "20 mins", ingredients: ["salt", "idiyapam flour", "boiling water"], instructions: "1. mix salt & flour with boiling water\n2. squeeze and steam for 5 mins", image: "", notes: "" },
-        { name: "TOMATOE PASTA", time: "25 mins", ingredients: ["pasta", "oil", "1/2 an onion", "raw chilli powder", "tomatoes"], instructions: "1. boil pasta\n2. sauté onions & chilli powder\n3. add tomatoes for sauce and toss", image: "", notes: "" },
-        { name: "KOLI PORIYAL", time: "35 mins", ingredients: ["oil", "chicken", "curry powder", "salt", "turmeric"], instructions: "1. mix oil, chicken, curry powder, salt & turmeric\n2. cook for 30 mins", image: "", notes: "" },
-        { name: "CHICKEN & VEG STEW", time: "45 mins", ingredients: ["chicken 600g", "salt", "ginger", "turmeric", "chillis", "one carrot", "runner beans", "one leek", "one onion", "one bell pepper", "coconut milk/milk"], instructions: "1. boil chicken with spices\n2. add veggies & coconut milk", image: "", notes: "" },
-        { name: "CHICKEN CURRY", time: "40 mins", ingredients: ["oil", "one onion", "garlic cloves", "chillis", "seeragam", "kadugu", "chicken breast 1kg", "salt", "curry powder", "tomatoes"], instructions: "1. sauté aromatics & seeds\n2. add chicken, salt, curry powder & tomatoes", image: "", notes: "" },
-        { name: "LEMON RICE", time: "30 mins", ingredients: ["oil", "onion", "chillis", "bell peppers", "frozen sweetcorn", "frozen peas", "one carrot", "prawns", "turmeric powder", "salt", "lemon", "rice"], instructions: "1. sauté veggies & optional prawns\n2. add turmeric, salt, rice & lemon juice", image: "", notes: "" },
-        { name: "AUBERGINE SALAD", time: "25 mins", ingredients: ["two aubergine", "oil", "half an onion", "chillis", "tomatoes", "yoghurt"], instructions: "1. slice & fry aubergines\n2. dice aromatics & mix with yoghurt", image: "", notes: "" },
-        { name: "SOU SOU DISH", time: "30 mins", ingredients: ["oil", "1/3 onion", "chillis", "one sou sou", "coconut milk"], instructions: "1. sauté onions & chillis\n2. cube sou sou and simmer in coconut milk", image: "", notes: "" },
-        { name: "PARUPU", time: "35 mins", ingredients: ["lentils", "chillis", "turmeric", "coconut milk", "garlic cloves", "salt", "onion", "seeragam", "kadugu"], instructions: "1. boil lentils with spices\n2. temper onions and seeds separately, pour in", image: "", notes: "" },
-        { name: "POTATO CURRY", time: "30 mins", ingredients: ["oil", "onion", "seeragam", "kadugu", "salt", "dried chillis", "tomatoes", "potatoes"], instructions: "1. temper spices & tomatoes into a sauce\n2. add sliced potatoes and water", image: "", notes: "" },
-        { name: "MUSHROOM CURRY - VARIATION", time: "25 mins", ingredients: ["oil", "2/3 onion", "salt", "mushrooms", "curry powder", "milk", "chillis"], instructions: "1. sauté onions & mushrooms\n2. add curry powder or chillis with milk", image: "", notes: "" }
+        { 
+            name: "BEANSPROUTS", 
+            time: "15 mins", 
+            ingredients: ["oil", "beansprouts", "chilli powder", "salt"], 
+            instructions: "1. oil\n2. beansprouts\n3. salt\n4. chilli powder", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "SARDINE DISH", 
+            time: "25 mins", 
+            ingredients: ["tin of sardine fish", "two chillis", "1/2 onion", "salt", "two baby potatoes", "chilli powder", "lemon"], 
+            instructions: "1. slice bigger loops of onions [half an onion]\n2. long slices of chilli [two]\n3. dash in the oil from sardine\n4. throw in salt\n5. finely sliced potatoes\n6. let it all fully cook\n7. chilli powder\n8. add in sardine once potato cooked\n9. some lemon after heat is off", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "AUBERGINE CURRY", 
+            time: "40 mins", 
+            ingredients: ["one onion", "chillis or dry chillis", "garlic cloves", "two aubergines", "curry powder", "salt", "tarmarind", "milk"], 
+            instructions: "1. onion finely diced\n2. chillis largely sliced OR dry chillis fried in oil alongside aubergine\n3. garlic diced\n4. gather these all in a saucepan and toast\n5. two aubergines finely diced\n   a. fry in separate pan un deep oil and once cooked throw in other saucepan\n6. six spoons curry powder\n7. salt\n8. puli mix\n9. start cooking\n   a. throw in some milk if you’re feeling fancy", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "LEEKS DISH", 
+            time: "30 mins", 
+            ingredients: ["oil", "2/3 onion", "salt", "chillis", "some potatoes", "leeks", "milk"], 
+            instructions: "1. oil\n2. onion finely diced\n3. some chillis sliced lanky ways\n4. dash in some salt\n5. add some finely diced potatoes\n6. wait for the potatoes to cook fully\n7. throw in the leeks, finely sliced\n   a. throw in some milk or single cream if you’re feeling fancy", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "COURGETTE DISH", 
+            time: "20 mins", 
+            ingredients: ["oil", "courgette", "salt", "paprika"], 
+            instructions: "1. oil\n2. finely diced courgette\n3. sprinkle salt\n4. throw in a bit of paprika", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "TUNA CURRY", 
+            time: "30 mins", 
+            ingredients: ["tuna can", "one onion", "chillis", "curry powder", "tomatoes", "seeragam", "kadugu"], 
+            instructions: "1. onions, chill and dash in oil from fish tin\n2. dash seeragam, kaduvu and curry powder\n3. dash in tuna\n4. dash in water\n5. dash in tomatoes", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "BEANS", 
+            time: "25 mins", 
+            ingredients: ["oil", "one onion", "seeragam", "kadugu", "salt", "tomato", "curry powder", "beans"], 
+            instructions: "1. dash in oil\n2. dash in diced onions\n3. dash in seeragam and kadugu\n4. dash in salt\n5. dash in sliced tomato\n6. dash in curry powder\n7. dash in finely sliced beans", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "IDIYAPAM", 
+            time: "20 mins", 
+            ingredients: ["salt", "idiyapam flour", "boiling water"], 
+            instructions: "1. some salt\n2. seven porridge spoon of idiyapam flour\n3. boiling water pour in and mix until dough\n4. squeeze quickly before it dries out\n5. steam for five minutes", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "TOMATOE PASTA", 
+            time: "25 mins", 
+            ingredients: ["pasta", "oil", "1/2 an onion", "raw chilli powder", "tomatoes"], 
+            instructions: "1. boil pasta\n2. half an onion until golden\n3. throw in some raw chilli powder\n4. add some finely sliced tomatoes until mushy sauce\n5. throw in pasta and shimmy shimmy shake", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "KOLI PORIYAL", 
+            time: "35 mins", 
+            ingredients: ["oil", "chicken", "curry powder", "salt", "turmeric"], 
+            instructions: "1. dash in oil\n2. dash in chicken\n3. dash in curry powder\n4. dash in salt\n5. dash in turmeric\n6. mix and cook for 30 minutes\n   * can season and marinate overnight in the fridge", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "CHICKEN & VEG STEW", 
+            time: "45 mins", 
+            ingredients: ["chicken 600g", "salt", "ginger", "turmeric", "chillis [like 25]", "one carrot", "runner beans", "one leek", "one onion", "one bell pepper", "coconut milk/milk [optional]"], 
+            instructions: "1. dice the chicken and put it in a pot\n2. add salt, ginger, turmeric, lots of chillis [like 25]\n3. fill half the pot with water\n4. let it all boil for 30 mins\n5. add the carrot chunks, and beans\n6. let it all cook for another ten minutes\n7. add leeks, onions, bell pepper\n8. add coconut milk/milk", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "CHICKEN CURRY", 
+            time: "40 mins", 
+            ingredients: ["oil", "one onion", "garlic cloves", "chillis", "seeragam [cumin seeds]", "kadugu [mustard seeds]", "chicken breast 1KG", "salt", "curry powder", "tomatoes"], 
+            instructions: "1. dash some oil in a pan\n2. dice up one onion and dash in\n3. dash in two diced garlic cloves\n4. dash in a chillis sliced up big\n5. dash in zeedaram and kaduvu\n6. dash in diced up chicken\n7. sprinkle some salt\n8. dash in eight spoons of curry powder minimum\n9. mix mix mix\n10. dash in two tomatoes sliced finely\n11. cook for thirty minutes", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "LEMON RICE", 
+            time: "30 mins", 
+            ingredients: ["oil", "onion", "chillis", "bell peppers", "frozen sweetcorn", "frozen peas", "one carrot", "prawns [optional]", "turmeric powder", "salt", "lemon", "rice"], 
+            instructions: "1. dash some oil in a pan\n2. chopped onions, and chilli’s dash in\n3. dash in chopped peppers, sweetcorn, peas, carrots\n   * [if feeling fancy, prawns]\n4. dash in turmeric powder, salt\n5. dash in rice\n6. dash in lemon juice", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "AUBERGINE SALAD", 
+            time: "25 mins", 
+            ingredients: ["two aubergine", "oil", "half an onion", "chillis", "tomatoes", "yoghurt"], 
+            instructions: "1. slice up the aubergine real fine\n2. fry in oil\n3. dice up half an onion, chillis and tomatoes\n4. add in the yoghurt", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "SOU SOU DISH", 
+            time: "30 mins", 
+            ingredients: ["oil", "1/3 onion", "chillis", "one sou sou", "coconut milk"], 
+            instructions: "1. dash some oil\n2. dice up onions and chillis and add\n3. slice sou sou into cubes\n4. add some coconut milk", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "PARUPU", 
+            time: "35 mins", 
+            ingredients: ["lentils", "chillis", "turmeric", "coconut milk", "garlic cloves", "salt", "onion", "seeragam [cumin seeds]", "kadugu [mustard seeds]"], 
+            instructions: "1. wash lentils until water is white\n2. fill with water\n3. couple chillis\n4. turmeric powder\n5. some coconut milk\n6. dash in mushy garlic\n7. remove any yellow bubbly stuff as it cooks\n8. sprinkle some salt\n9. in a separate pan\n   a. fry some onions, kadugu, seeragam\n10. dash into main dish", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "POTATO CURRY", 
+            time: "30 mins", 
+            ingredients: ["oil", "onion", "seeragam [cumin seeds]", "kadugu [mustard seeds]", "salt", "dried chillis", "tomatoes", "potatoes"], 
+            instructions: "1. dash in oil\n2. dash in an onion diced\n3. dash in curry powder\n4. dash in seeragam and kadugu\n5. dash in salt\n6. dash in dried chillis sliced\n7. dash in sliced tomatoes\n8. mush it in until saucy\n9. dash in finely sliced potatoes\n10. dash in water\n11. mixy mix", 
+            image: "", 
+            notes: "" 
+        },
+        { 
+            name: "MUSHROOM CURRY - variation", 
+            time: "25 mins", 
+            ingredients: ["oil", "2/3 onion", "salt", "mushrooms", "curry powder", "milk", "chillis"], 
+            instructions: "1. dash in oil\n2. 2/3 onion\n3. sprinkle salt\n4. dash in sliced mushrooms\n5. dash in some curry powder\n   a. if milk dish, ignore curry powder and replace with chillis\n   b. throw in some milk", 
+            image: "", 
+            notes: "" 
+        }
     ];
 
     let fridgeItems = JSON.parse(localStorage.getItem('wonderland_fridge')) || [
