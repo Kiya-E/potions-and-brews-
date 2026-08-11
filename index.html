@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ Potions and Brews Masterbook & Kitchen</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #ec4899;
+            --primary-hover: #db2777;
+            --secondary: #8b5cf6;
+            --accent: #10b981;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --wood-dark: #78350f;
+            --wood-light: #92400e;
+            --diet-vegan: #059669;
+            --diet-veg: #d97706;
+            --diet-nonveg: #dc2626;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            perspective: 3000px;
+        }
+
+        .container {
+            max-width: 1550px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            background: linear-gradient(to right, #ec4899, #8b5cf6, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.8rem;
+            margin: 0 0 5px 0;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--card-bg);
+            color: var(--text-muted);
+            border: 2px solid var(--border);
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            margin-top: 0;
+            color: var(--secondary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: 1px solid var(--border);
+            color: white;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 12px;
+            font-size: 1rem;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        button.action-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        button.action-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Recipe Book Grid & Filters with Color Coding */
+        .filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-bar input, .filter-bar select {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 0;
+        }
+
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .recipe-card {
+            background: #0f172a;
+            border: 1px solid var(--border);
+            border-left: 6px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, border-color 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .recipe-card.card-vegan { border-left-color: var(--diet-vegan); }
+        .recipe-card.card-veg { border-left-color: var(--diet-veg); }
+        .recipe-card.card-nonveg { border-left-color: var(--diet-nonveg); }
+
+        .recipe-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        .recipe-cover {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            background: #334155;
+        }
+
+        .recipe-body {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recipe-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin: 0 0 6px 0;
+            color: var(--text-main);
+        }
+
+        .recipe-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+        }
+
+        .recipe-time-badge {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .diet-badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+        .diet-vegan { background: var(--diet-vegan); color: white; }
+        .diet-veg { background: var(--diet-veg); color: white; }
+        .diet-nonveg { background: var(--diet-nonveg); color: white; }
+
+        .recipe-ingredients-tag {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .recipe-steps {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            white-space: pre-line;
+            line-height: 1.4;
+            max-height: 100px;
+            overflow-y: auto;
+            border-left: 2px solid var(--accent);
+            padding-left: 8px;
+            margin-top: auto;
+        }
+
+        /* --- EXPANDED COOKING MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 750px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-cover {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            background: #0f172a;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .checklist-item.checked span {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .edit-toggle-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        /* --- KITCHEN STUDIO (FRIDGE & PANTRY SIDE BY SIDE) --- */
+        .kitchen-studio {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            overflow: visible;
+            padding: 20px 0;
+        }
+
+        /* --- 3D APPLIANCE MODEL SCENE --- */
+        .unified-scene {
+            width: 100%;
+            max-width: 620px;
+            height: 1150px;
+            perspective: 3000px;
+            position: relative;
+            overflow: visible;
+        }
+
+        .appliance-outer-body {
+            width: 100%;
+            height: 100%;
+            background: #1e293b;
+            border-radius: 20px;
+            border: 10px solid #475569;
+            position: relative;
+            transform-style: preserve-3d;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.85);
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            box-sizing: border-box;
+            gap: 10px;
+            overflow: visible;
+        }
+
+        .master-door {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-origin: left;
+            transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        .master-door.open {
+            transform: rotateY(-125deg);
+        }
+
+        .door-front, .door-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 14px;
+            backface-visibility: hidden;
+            box-sizing: border-box;
+        }
+
+        .door-front {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            border: 6px solid #94a3b8;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.35);
+            z-index: 2;
+        }
+
+        /* Inside of door: restricted to height above freezer so bins stop correctly */
+        .door-back {
+            background: linear-gradient(135deg, #475569 0%, #334155 100%);
+            border: 6px solid #64748b;
+            transform: rotateY(180deg);
+            width: 100%;
+            height: 61%;
+            top: 0;
+            left: 0;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.5);
+            z-index: 1;
+        }
+
+        .door-handle {
+            position: absolute;
+            right: 20px;
+            top: 42%;
+            width: 14px;
+            height: 220px;
+            background: #cbd5e1;
+            border-radius: 7px;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        .door-quotes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+            overflow-y: auto;
+            max-height: calc(100% - 35px);
+            padding-right: 4px;
+        }
+
+        /* Varied quote card styling for different sizes/accents */
+        .door-quote-card {
+            background: rgba(15, 23, 42, 0.55);
+            border-left: 3px solid var(--primary);
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-style: italic;
+            color: #f1f5f9;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+            backdrop-filter: blur(2px);
+        }
+        .door-quote-card.small { font-size: 0.65rem; padding: 4px 7px; border-left-color: var(--secondary); }
+        .door-quote-card.medium { font-size: 0.75rem; padding: 6px 9px; }
+        .door-quote-card.large { font-size: 0.88rem; font-weight: 500; border-left-color: var(--accent); padding: 8px 11px; }
+
+        .door-quote-card cite {
+            display: block;
+            margin-top: 2px;
+            font-size: 0.55rem;
+            font-style: normal;
+            font-weight: 700;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .door-quote-card.small cite { font-size: 0.5rem; }
+        .door-quote-card.large cite { font-size: 0.6rem; color: var(--accent); }
+
+        .door-hint {
+            width: 100%;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            font-weight: 800;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* --- 3D WOODEN PANTRY CUPBOARD --- */
+        .pantry-scene {
+            width: 100%;
+            max-width: 420px;
+            height: 1150px;
+            perspective: 3000px;
+            position: relative;
+            overflow: visible;
+        }
+
+        .pantry-outer-body {
+            width: 100%;
+            height: 100%;
+            background: var(--wood-dark);
+            border-radius: 20px;
+            border: 10px solid #451a03;
+            position: relative;
+            transform-style: preserve-3d;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.85);
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            box-sizing: border-box;
+            gap: 10px;
+            overflow: visible;
+        }
+
+        .pantry-door {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #92400e 0%, #78350f 100%);
+            border-radius: 14px;
+            border: 6px solid #b45309;
+            transform-origin: left;
+            transition: transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            z-index: 100;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.4);
+        }
+
+        .pantry-door.open {
+            transform: rotateY(-125deg);
+        }
+
+        .pantry-handle {
+            position: absolute;
+            right: 20px;
+            top: 48%;
+            width: 12px;
+            height: 120px;
+            background: #f59e0b;
+            border-radius: 6px;
+            box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+            z-index: 102;
+        }
+
+        .pantry-shelf {
+            background: #451a03;
+            border-bottom: 4px solid #78350f;
+            flex: 1;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-content: flex-start;
+            overflow-y: auto;
+            position: relative;
+            min-height: 120px;
+        }
+
+        .pantry-shelf-label {
+            position: absolute;
+            top: 3px;
+            right: 10px;
+            font-size: 0.7rem;
+            color: #d97706;
+            text-transform: uppercase;
+            font-weight: 700;
+            pointer-events: none;
+        }
+
+        .door-bin {
+            background: rgba(15, 23, 42, 0.85);
+            border: 2px solid #94a3b8;
+            flex: 1;
+            border-radius: 6px;
+            padding: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            align-content: flex-start;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .bin-label {
+            position: absolute;
+            top: 2px;
+            right: 6px;
+            font-size: 0.6rem;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .interior-shelf {
+            background: #0f172a;
+            border-bottom: 4px solid #334155;
+            flex: 1;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-content: flex-start;
+            overflow-y: auto;
+            position: relative;
+            min-height: 120px;
+        }
+
+        .shelf-label {
+            position: absolute;
+            top: 3px;
+            right: 10px;
+            font-size: 0.7rem;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 700;
+            pointer-events: none;
+        }
+
+        .pull-drawer {
+            height: 120px;
+            background: rgba(15, 23, 42, 0.92);
+            border: 2px dashed #64748b;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-content: flex-start;
+            cursor: pointer;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+            transform-style: preserve-3d;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .pull-drawer::before {
+            content: attr(data-drawer-label);
+            position: absolute;
+            top: 3px;
+            right: 10px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .pull-drawer.pulled {
+            transform: translateZ(95px) translateY(5px);
+            background: #1e293b;
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            z-index: 20;
+        }
+
+        .food-item-node {
+            background: rgba(51, 65, 85, 0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.2s, background 0.2s;
+            width: 48px;
+            height: 48px;
+        }
+
+        .food-item-node:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+            transform: scale(1.15) rotate(4deg);
+        }
+
+        .drawing-box {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .drawing-box svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4));
+            animation: floatWiggle 3s ease-in-out infinite;
+        }
+
+        @keyframes floatWiggle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-2px) rotate(3deg); }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .match-badge {
+            background: var(--accent);
+            color: #0f172a;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🧪 Potions and Brews</h1>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('recipes')">📖 Recipe Masterbook</button>
+        <button class="tab-btn" onclick="switchTab('fridge')">🧊 Fridge & Pantry</button>
+        <button class="tab-btn" onclick="switchTab('sous-chef')">👨‍🍳 Sous Chef</button>
+    </div>
+
+    <!-- TAB 1: RECIPE MASTERBOOK -->
+    <div id="recipes-tab" class="tab-content active">
+        <div class="card">
+            <h2>Recipe Masterbook</h2>
+            <div class="filter-bar">
+                <input type="text" id="recipe-search" placeholder="Search by name or ingredient..." oninput="renderRecipes()">
+                <select id="filter-diet" onchange="renderRecipes()">
+                    <option value="all">All Dietary Types</option>
+                    <option value="vegan">Vegan</option>
+                    <option value="veg">Veg</option>
+                    <option value="non-veg">Non-Veg</option>
+                </select>
+                <select id="sort-order" onchange="renderRecipes()">
+                    <option value="alpha">Alphabetical (A-Z)</option>
+                    <option value="time-desc">Longest to Shortest Cook Time</option>
+                    <option value="time-asc">Shortest to Longest Cook Time</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Your Recipes <span id="recipe-count" style="font-size: 0.9rem; color: var(--text-muted);"></span></h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top:0;">Click any recipe card to open Cooking Mode & Checklist!</p>
+            <div class="recipe-grid" id="recipe-grid"></div>
+        </div>
+
+        <div class="card">
+            <h2>Add New Potion</h2>
+            <input type="text" id="new-name" placeholder="Recipe Name">
+            <input type="text" id="new-time" placeholder="Time to Cook (e.g. 30 mins)">
+            <input type="text" id="new-ingredients" placeholder="Ingredients (comma separated)">
+            <textarea id="new-instructions" rows="3" placeholder="Step-by-step instructions..."></textarea>
+            <label style="font-size: 0.9rem; color: var(--text-muted); display: block; margin-bottom: 6px;">Cover Image (Finished Dish):</label>
+            <input type="file" id="new-image" accept="image/*">
+            <button class="action-btn" onclick="addNewRecipe()">Save Recipe to Masterbook</button>
+        </div>
+    </div>
+
+    <!-- TAB 2: FRIDGE & PANTRY -->
+    <div id="fridge-tab" class="tab-content">
+        <div class="card">
+            <h2>🛒 Stock Kitchen Storage</h2>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="grocery-input" placeholder="What did you buy? (e.g. flour, rice, 3 apples)" style="margin-bottom:0;">
+                <select id="shelf-select" style="width: 270px; margin-bottom:0;">
+                    <optgroup label="Pantry Cupboard">
+                        <option value="pantry-top">Pantry: Top Shelf</option>
+                        <option value="pantry-spices">Pantry: Spice Rack</option>
+                        <option value="pantry-grains">Pantry: Flour, Rice & Grains</option>
+                        <option value="pantry-cans">Pantry: Canned Goods & Oils</option>
+                    </optgroup>
+                    <optgroup label="Fridge Main Shelves">
+                        <option value="fridge-top">Fridge: Top Shelf</option>
+                        <option value="fridge-wire">Fridge: Metal Bottle Rack</option>
+                        <option value="fridge-mid">Fridge: Middle Shelf</option>
+                        <option value="crisper1">Fridge: Upper Crisper Drawer</option>
+                        <option value="crisper2">Fridge: Humidity Crisper Drawer</option>
+                    </optgroup>
+                    <optgroup label="Fridge Door Bins">
+                        <option value="door1">Door: Top Wire Guard Bin</option>
+                        <option value="door2">Door: Upper Bin</option>
+                        <option value="door3">Door: Middle Bin</option>
+                        <option value="door4">Door: Lower Bin (Jams/Herbs)</option>
+                    </optgroup>
+                    <optgroup label="Freezer">
+                        <option value="freezer1">Freezer: Top Drawer</option>
+                        <option value="freezer2">Freezer: Middle Drawer</option>
+                        <option value="freezer3">Freezer: Bottom Drawer</option>
+                    </optgroup>
+                </select>
+            </div>
+            <button class="action-btn" style="margin-top: 12px;" onclick="addFridgeItem()">Place Item in Storage</button>
+        </div>
+
+        <div class="card">
+            <h2>🧊 Kitchen Units (Fridge & Wooden Pantry) <span style="font-size: 0.75rem; color: var(--text-muted);">(Click doors to open • Click drawers to pull out • Click to consume)</span></h2>
+            
+            <div class="kitchen-studio">
+                <!-- 3D FRIDGE SCENE -->
+                <div class="unified-scene">
+                    <div class="appliance-outer-body">
+                        <div class="master-door" id="master-door" onclick="toggleMasterDoor(event)">
+                            <!-- FRONT OF DOOR: ALL QUOTES WITH NEW ADDITIONS -->
+                            <div class="door-front">
+                                <div class="door-quotes-container">
+                                    <div class="door-quote-card large">
+                                        “No mourners. No funerals.”
+                                        <cite>— Six of Crows</cite>
+                                    </div>
+                                    <div class="door-quote-card small">
+                                        “The water hears and hums. The water is a patient thing.”
+                                        <cite>— Six of Crows</cite>
+                                    </div>
+                                    <div class="door-quote-card medium">
+                                        “Writing is the closest thing we have to real magic.”
+                                        <cite>— Yellowface</cite>
+                                    </div>
+                                    <div class="door-quote-card small">
+                                        “Perception is everything.”
+                                        <cite>— Yellowface</cite>
+                                    </div>
+                                    <div class="door-quote-card large">
+                                        “You could do anything if you were delusional.”
+                                        <cite>— Katabasis</cite>
+                                    </div>
+                                    <div class="door-quote-card medium">
+                                        “The heart is an arrow. It demands aim.”
+                                        <cite>— Six of Crows</cite>
+                                    </div>
+                                    <div class="door-quote-card small">
+                                        “Better to regret what you have done than what you have not.”
+                                        <cite>— Six of Crows</cite>
+                                    </div>
+                                    <div class="door-quote-card medium">
+                                        “History is just a series of stories told by the people who managed to survive.”
+                                        <cite>— Yellowface</cite>
+                                    </div>
+                                    <div class="door-quote-card large">
+                                        “To fly, we have to let go of what weighs us down.”
+                                        <cite>— Daughter of the Moon Goddess</cite>
+                                    </div>
+                                    <div class="door-quote-card small">
+                                        “Even death has a heart.”
+                                        <cite>— The Book Thief</cite>
+                                    </div>
+                                    <div class="door-quote-card medium">
+                                        “I have hated words and I have loved them, and I hope I have made them right.”
+                                        <cite>— The Book Thief</cite>
+                                    </div>
+                                    <div class="door-quote-card large">
+                                        “The underworld remembers everything you tried to forget.”
+                                        <cite>— Katabasis</cite>
+                                    </div>
+                                    <div class="door-quote-card small">
+                                        “Act with honor, or don't act at all.”
+                                        <cite>— Six of Crows</cite>
+                                    </div>
+                                    <div class="door-quote-card large">
+                                        “If I am a sword, I am a sword made of glass.”
+                                        <cite>— Red Queen</cite>
+                                    </div>
+                                    <div class="door-quote-card medium">
+                                        “My blood is red, the color of common folk, but it burns like silver.”
+                                        <cite>— Red Queen</cite>
+                                    </div>
+                                    <div class="door-quote-card small">
+                                        “I believe that before all else, I am a human being.”
+                                        <cite>— A Doll's House</cite>
+                                    </div>
+                                    <div class="door-quote-card large">
+                                        “The future hasn't happened yet.”
+                                        <cite>— Before the Coffee Gets Cold</cite>
+                                    </div>
+                                    <div class="door-quote-card small">
+                                        “No matter what kind of miracle takes place, the heart will not change.”
+                                        <cite>— Before the Coffee Gets Cold</cite>
+                                    </div>
+                                    <div class="door-quote-card large">
+                                        “Most of all, I hate you because I think of you so often.”
+                                        <cite>— The Cruel Prince</cite>
+                                    </div>
+                                    <div class="door-quote-card medium">
+                                        “If I cannot be better than them, I will become so much worse.”
+                                        <cite>— The Cruel Prince</cite>
+                                    </div>
+                                </div>
+                                <div class="door-handle"></div>
+                                <div class="door-hint" id="door-hint">OPEN FRIDGE</div>
+                            </div>
+
+                            <!-- BACK/INSIDE OF DOOR: BINS (STOPPING ABOVE FREEZER) -->
+                            <div class="door-back">
+                                <div class="door-bin" id="shelf-door1"><span class="bin-label">Top Wire Bin</span></div>
+                                <div class="door-bin" id="shelf-door2"><span class="bin-label">Upper Door Bin</span></div>
+                                <div class="door-bin" id="shelf-door3"><span class="bin-label">Middle Door Bin</span></div>
+                                <div class="door-bin" id="shelf-door4"><span class="bin-label">Lower Door Bin</span></div>
+                            </div>
+                        </div>
+
+                        <div class="interior-shelf" id="shelf-fridge-top"><span class="shelf-label">Top Shelf</span></div>
+                        <div class="interior-shelf" id="shelf-fridge-wire"><span class="shelf-label">Metal Rack</span></div>
+                        <div class="interior-shelf" id="shelf-fridge-mid"><span class="shelf-label">Middle Shelf</span></div>
+                        <div class="pull-drawer" id="drawer-crisper1" data-drawer-label="Upper Crisper" onclick="toggleDrawer('crisper1', event)"></div>
+                        <div class="pull-drawer" id="drawer-crisper2" data-drawer-label="Humidity Crisper" onclick="toggleDrawer('crisper2', event)"></div>
+
+                        <div class="pull-drawer" id="drawer-freezer1" data-drawer-label="Freezer Top" onclick="toggleDrawer('freezer1', event)"></div>
+                        <div class="pull-drawer" id="drawer-freezer2" data-drawer-label="Freezer Middle" onclick="toggleDrawer('freezer2', event)"></div>
+                        <div class="pull-drawer" id="drawer-freezer3" data-drawer-label="Freezer Bottom" onclick="toggleDrawer('freezer3', event)"></div>
+                    </div>
+                </div>
+
+                <!-- 3D WOODEN PANTRY CUPBOARD SCENE -->
+                <div class="pantry-scene">
+                    <div class="pantry-outer-body">
+                        <div class="pantry-door" id="pantry-door" onclick="togglePantryDoor(event)">
+                            <div class="pantry-handle"></div>
+                            <div class="door-hint" id="pantry-hint">OPEN PANTRY</div>
+                        </div>
+
+                        <div class="pantry-shelf" id="shelf-pantry-top"><span class="pantry-shelf-label">Top Shelf</span></div>
+                        <div class="pantry-shelf" id="shelf-pantry-spices"><span class="pantry-shelf-label">Spice Rack</span></div>
+                        <div class="pantry-shelf" id="shelf-pantry-grains"><span class="pantry-shelf-label">Flour, Rice & Grains</span></div>
+                        <div class="pantry-shelf" id="shelf-pantry-cans"><span class="pantry-shelf-label">Canned Goods & Oils</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: SOUS CHEF -->
+    <div id="sous-chef-tab" class="tab-content">
+        <div class="card" style="text-align: center;">
+            <h2>👨‍🍳 Your Personal Sous Chef</h2>
+            <p style="color: var(--text-muted); margin-bottom: 20px;">Your Sous Chef has scanned your fridge and pantry inventory. Here are the potions you can brew right now!</p>
+            <button class="action-btn" style="max-width: 300px; margin: 0 auto; font-size: 1.2rem; padding: 15px;" onclick="pickForMe()">🎲 Pick For Me!</button>
+            <div id="random-pick-result" style="margin-top: 20px;"></div>
+        </div>
+
+        <div class="card">
+            <h2>Ready-to-Cook Recipes (100% Possible)</h2>
+            <div id="possible-recipes-container"></div>
+        </div>
+    </div>
+</div>
+
+<!-- EXPANDED COOKING MODE MODAL -->
+<div class="modal-overlay" id="recipe-modal" onclick="closeRecipeModal(event)">
+    <div class="modal-card" id="modal-card-content" onclick="event.stopPropagation()">
+        <button class="close-modal" onclick="closeRecipeModalForce()">✕</button>
+        <div id="modal-inner-html"></div>
+    </div>
+</div>
+
+<script>
+    let recipes = JSON.parse(localStorage.getItem('wonderland_recipes')) || [
+        { name: "BEANSPROUTS", time: "15 mins", ingredients: ["oil", "beansprouts", "chilli powder", "salt"], instructions: "1. oil\n2. beansprouts\n3. salt\n4. chilli powder", image: "", notes: "" },
+        { name: "SARDINE DISH", time: "25 mins", ingredients: ["tin of sardine fish", "two chillis", "1/2 onion", "salt", "two baby potatoes", "chilli powder", "lemon"], instructions: "1. slice onions & chillis\n2. dash sardine oil & salt\n3. cook potatoes and add sardine + lemon", image: "", notes: "" },
+        { name: "AUBERGINE CURRY", time: "40 mins", ingredients: ["one onion", "chillis", "garlic cloves", "two aubergines", "curry powder", "salt", "tarmarind", "milk"], instructions: "1. fry aubergines\n2. toast onion & garlic\n3. add curry powder, salt, puli mix & milk", image: "", notes: "" },
+        { name: "LEEKS DISH", time: "30 mins", ingredients: ["oil", "2/3 onion", "salt", "chillis", "some potatoes", "leeks", "milk"], instructions: "1. fry onions & chillis\n2. cook potatoes fully\n3. throw in leeks and milk/cream", image: "", notes: "" },
+        { name: "COURGETTE DISH", time: "20 mins", ingredients: ["oil", "courgette", "salt", "paprika"], instructions: "1. oil\n2. finely diced courgette\n3. sprinkle salt and paprika", image: "", notes: "" },
+        { name: "TUNA CURRY", time: "30 mins", ingredients: ["tuna can", "one onion", "chillis", "curry powder", "tomatoes", "seeragam", "kadugu"], instructions: "1. sauté onions, chilli in fish oil\n2. add seeds, curry powder, tuna & tomatoes", image: "", notes: "" },
+        { name: "BEANS", time: "25 mins", ingredients: ["oil", "one onion", "seeragam", "kadugu", "salt", "tomato", "curry powder", "beans"], instructions: "1. temper seeds & onions\n2. add salt, tomato, curry powder & beans", image: "", notes: "" },
+        { name: "IDIYAPAM", time: "20 mins", ingredients: ["salt", "idiyapam flour", "boiling water"], instructions: "1. mix salt & flour with boiling water\n2. squeeze and steam for 5 mins", image: "", notes: "" },
+        { name: "TOMATOE PASTA", time: "25 mins", ingredients: ["pasta", "oil", "1/2 an onion", "raw chilli powder", "tomatoes"], instructions: "1. boil pasta\n2. sauté onions & chilli powder\n3. add tomatoes for sauce and toss", image: "", notes: "" },
+        { name: "KOLI PORIYAL", time: "35 mins", ingredients: ["oil", "chicken", "curry powder", "salt", "turmeric"], instructions: "1. mix oil, chicken, curry powder, salt & turmeric\n2. cook for 30 mins", image: "", notes: "" },
+        { name: "CHICKEN & VEG STEW", time: "45 mins", ingredients: ["chicken 600g", "salt", "ginger", "turmeric", "chillis", "one carrot", "runner beans", "one leek", "one onion", "one bell pepper", "coconut milk/milk"], instructions: "1. boil chicken with spices\n2. add veggies & coconut milk", image: "", notes: "" },
+        { name: "CHICKEN CURRY", time: "40 mins", ingredients: ["oil", "one onion", "garlic cloves", "chillis", "seeragam", "kadugu", "chicken breast 1kg", "salt", "curry powder", "tomatoes"], instructions: "1. sauté aromatics & seeds\n2. add chicken, salt, curry powder & tomatoes", image: "", notes: "" },
+        { name: "LEMON RICE", time: "30 mins", ingredients: ["oil", "onion", "chillis", "bell peppers", "frozen sweetcorn", "frozen peas", "one carrot", "prawns", "turmeric powder", "salt", "lemon", "rice"], instructions: "1. sauté veggies & optional prawns\n2. add turmeric, salt, rice & lemon juice", image: "", notes: "" },
+        { name: "AUBERGINE SALAD", time: "25 mins", ingredients: ["two aubergine", "oil", "half an onion", "chillis", "tomatoes", "yoghurt"], instructions: "1. slice & fry aubergines\n2. dice aromatics & mix with yoghurt", image: "", notes: "" },
+        { name: "SOU SOU DISH", time: "30 mins", ingredients: ["oil", "1/3 onion", "chillis", "one sou sou", "coconut milk"], instructions: "1. sauté onions & chillis\n2. cube sou sou and simmer in coconut milk", image: "", notes: "" },
+        { name: "PARUPU", time: "35 mins", ingredients: ["lentils", "chillis", "turmeric", "coconut milk", "garlic cloves", "salt", "onion", "seeragam", "kadugu"], instructions: "1. boil lentils with spices\n2. temper onions and seeds separately, pour in", image: "", notes: "" },
+        { name: "POTATO CURRY", time: "30 mins", ingredients: ["oil", "onion", "seeragam", "kadugu", "salt", "dried chillis", "tomatoes", "potatoes"], instructions: "1. temper spices & tomatoes into a sauce\n2. add sliced potatoes and water", image: "", notes: "" },
+        { name: "MUSHROOM CURRY - VARIATION", time: "25 mins", ingredients: ["oil", "2/3 onion", "salt", "mushrooms", "curry powder", "milk", "chillis"], instructions: "1. sauté onions & mushrooms\n2. add curry powder or chillis with milk", image: "", notes: "" }
+    ];
+
+    let fridgeItems = JSON.parse(localStorage.getItem('wonderland_fridge')) || [
+        { id: 1, name: "oil", shelf: "fridge-top" },
+        { id: 2, name: "apple", shelf: "crisper1" },
+        { id: 3, name: "banana", shelf: "crisper1" },
+        { id: 4, name: "salt", shelf: "fridge-mid" },
+        { id: 5, name: "marmite", shelf: "door4" },
+        { id: 6, name: "rice", shelf: "pantry-grains" },
+        { id: 7, name: "flour", shelf: "pantry-grains" }
+    ];
+
+    function saveStorage() {
+        localStorage.setItem('wonderland_recipes', JSON.stringify(recipes));
+        localStorage.setItem('wonderland_fridge', JSON.stringify(fridgeItems));
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        if (tabId === 'recipes') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('recipes-tab').classList.add('active');
+            renderRecipes();
+        } else if (tabId === 'fridge') {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('fridge-tab').classList.add('active');
+            renderFridge();
+        } else if (tabId === 'sous-chef') {
+            document.querySelectorAll('.tab-btn')[2].classList.add('active');
+            document.getElementById('sous-chef-tab').classList.add('active');
+            renderSousChef();
+        }
+    }
+
+    // --- DIETARY CLASSIFICATION HELPER ---
+    function getDietaryType(ingredients) {
+        const nonVegKeywords = ['chicken', 'fish', 'sardine', 'tuna', 'prawn', 'prawns', 'meat', 'egg', 'eggs'];
+        const dairyKeywords = ['milk', 'yoghurt', 'yogurt', 'butter', 'cream', 'cheese', 'ghee', 'honey', 'single cream'];
+        
+        const hasNonVeg = ingredients.some(ing => nonVegKeywords.some(kw => ing.toLowerCase().includes(kw)));
+        if (hasNonVeg) return 'non-veg';
+
+        const hasDairy = ingredients.some(ing => {
+            const lower = ing.toLowerCase();
+            if (lower.includes('coconut milk')) return false;
+            return dairyKeywords.some(kw => lower.includes(kw));
+        });
+
+        if (hasDairy) return 'veg';
+        return 'vegan';
+    }
+
+    function parseMinutes(timeStr) {
+        if (!timeStr) return 30;
+        const match = timeStr.match(/(\d+)/);
+        return match ? parseInt(match[1], 10) : 30;
+    }
+
+    // --- RECIPE MASTERBOOK & COOKING MODE LOGIC ---
+    function renderRecipes() {
+        const query = document.getElementById('recipe-search').value.toLowerCase();
+        const filterDiet = document.getElementById('filter-diet').value;
+        const sortOrder = document.getElementById('sort-order').value;
+        const grid = document.getElementById('recipe-grid');
+        
+        recipes.sort((a, b) => a.name.localeCompare(b.name));
+
+        let filtered = recipes.filter(r => {
+            const matchesQuery = r.name.toLowerCase().includes(query) || r.ingredients.some(i => i.toLowerCase().includes(query));
+            const diet = getDietaryType(r.ingredients);
+            const matchesDiet = (filterDiet === 'all' || diet === filterDiet);
+            return matchesQuery && matchesDiet;
+        });
+
+        if (sortOrder === 'time-desc') {
+            filtered.sort((a, b) => parseMinutes(b.time) - parseMinutes(a.time) || a.name.localeCompare(b.name));
+        } else if (sortOrder === 'time-asc') {
+            filtered.sort((a, b) => parseMinutes(a.time) - parseMinutes(b.time) || a.name.localeCompare(b.name));
+        } else {
+            filtered.sort((a, b) => a.name.localeCompare(b.name));
+        }
+
+        document.getElementById('recipe-count').innerText = `(${filtered.length} dishes)`;
+
+        let html = '';
+        filtered.forEach((recipe) => {
+            const realIdx = recipes.indexOf(recipe);
+            const coverImg = recipe.image ? recipe.image : 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=600&q=80';
+            const timeText = recipe.time ? recipe.time : '30 mins';
+            const diet = getDietaryType(recipe.ingredients);
+            const dietClass = `diet-${diet}`;
+            const dietLabel = diet.toUpperCase();
+
+            html += `
+                <div class="recipe-card card-${diet}" onclick="openRecipeModal(${realIdx})">
+                    <img src="${coverImg}" class="recipe-cover" alt="${recipe.name}">
+                    <div class="recipe-body">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <h3 class="recipe-title">${recipe.name}</h3>
+                            <span class="diet-badge ${dietClass}">${dietLabel}</span>
+                        </div>
+                        <div class="recipe-meta">
+                            <span class="recipe-time-badge">⏱️ ${timeText}</span>
+                        </div>
+                        <div class="recipe-ingredients-tag"><strong>Ingredients:</strong> ${recipe.ingredients.join(', ')}</div>
+                        <div class="recipe-steps">${recipe.instructions}</div>
+                    </div>
+                </div>
+            `;
+        });
+        grid.innerHTML = html;
+    }
+
+    function openRecipeModal(index, editMode = false) {
+        const recipe = recipes[index];
+        const modal = document.getElementById('recipe-modal');
+        const inner = document.getElementById('modal-inner-html');
+        const coverImg = recipe.image ? recipe.image : 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=600&q=80';
+        const recipeTime = recipe.time ? recipe.time : '30 mins';
+        const diet = getDietaryType(recipe.ingredients);
+
+        if (editMode) {
+            inner.innerHTML = `
+                <h2>Edit Potion / Recipe</h2>
+                <label>Recipe Name:</label>
+                <input type="text" id="edit-name" value="${recipe.name}">
+                <label>Time to Cook (e.g. 30 mins):</label>
+                <input type="text" id="edit-time" value="${recipeTime}">
+                <label>Ingredients (comma-separated):</label>
+                <input type="text" id="edit-ingredients" value="${recipe.ingredients.join(', ')}">
+                <label>Instructions:</label>
+                <textarea id="edit-instructions" rows="5">${recipe.instructions}</textarea>
+                <label>Change Cover Image:</label>
+                <input type="file" id="edit-image" accept="image/*">
+                <button class="action-btn" onclick="saveEditedRecipe(${index})">Save Changes</button>
+                <button class="edit-toggle-btn" style="background:#64748b; margin-top:10px;" onclick="openRecipeModal(${index}, false)">Cancel</button>
+            `;
+        } else {
+            let checklistHtml = recipe.ingredients.map((ing, i) => `
+                <label class="checklist-item" id="check-label-${index}-${i}">
+                    <input type="checkbox" onchange="toggleCheck(${index}, ${i})">
+                    <span>${ing}</span>
+                </label>
+            `).join('');
+
+            inner.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+                    <div>
+                        <h1 style="margin:0; font-size: 2.5rem; color:var(--primary); line-height:1.2; font-weight:900;">${recipe.name}</h1>
+                        <p style="font-size: 1rem; color: var(--secondary); margin: 6px 0 0 0; font-weight:700;">⏱️ Cook Time: ${recipeTime} | <span style="text-transform:uppercase;">${diet}</span></p>
+                    </div>
+                    <button class="edit-toggle-btn" onclick="openRecipeModal(${index}, true)">✏️ Edit</button>
+                </div>
+                <img src="${coverImg}" class="modal-cover" alt="${recipe.name}">
+                
+                <h3 style="color:var(--secondary); margin-bottom:8px; font-size:1.1rem; text-transform:uppercase; letter-spacing:0.5px;">Ingredients</h3>
+                <div style="margin-bottom:20px;">${checklistHtml}</div>
+
+                <h3 style="color:var(--secondary); margin-bottom:8px; font-size:1.1rem; text-transform:uppercase; letter-spacing:0.5px;">Step-by-Step Instructions</h3>
+                <div style="background:#0f172a; padding:15px; border-radius:8px; border:1px solid var(--border); white-space:pre-line; line-height:1.5; margin-bottom:20px; font-size:0.95rem;">${recipe.instructions}</div>
+
+                <h3 style="color:var(--secondary); margin-bottom:8px; font-size:1.1rem; text-transform:uppercase; letter-spacing:0.5px;">Personal Notes & Adjustments</h3>
+                <textarea id="recipe-notes-${index}" rows="3" placeholder="Add cooking notes, adjustments, or tips here..." oninput="saveNotes(${index})">${recipe.notes || ''}</textarea>
+            `;
+        }
+
+        modal.classList.add('active');
+    }
+
+    function toggleCheck(recipeIdx, ingIdx) {
+        const label = document.getElementById(`check-label-${recipeIdx}-${ingIdx}`);
+        label.classList.toggle('checked');
+    }
+
+    function saveNotes(index) {
+        const notesVal = document.getElementById(`recipe-notes-${index}`).value;
+        recipes[index].notes = notesVal;
+        saveStorage();
+    }
+
+    function saveEditedRecipe(index) {
+        const name = document.getElementById('edit-name').value.trim();
+        const timeVal = document.getElementById('edit-time').value.trim();
+        const ingredientsRaw = document.getElementById('edit-ingredients').value.trim();
+        const instructions = document.getElementById('edit-instructions').value.trim();
+        const imageFile = document.getElementById('edit-image').files[0];
+
+        if (!name || !ingredientsRaw) {
+            alert("Name and ingredients cannot be empty!");
+            return;
+        }
+
+        recipes[index].name = name;
+        recipes[index].time = timeVal || '30 mins';
+        recipes[index].ingredients = ingredientsRaw.toLowerCase().split(',').map(i => i.trim()).filter(i => i);
+        recipes[index].instructions = instructions;
+
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                recipes[index].image = e.target.result;
+                saveStorage();
+                renderRecipes();
+                openRecipeModal(index, false);
+                alert("Recipe updated successfully!");
+            };
+            reader.readAsDataURL(imageFile);
+        } else {
+            saveStorage();
+            renderRecipes();
+            openRecipeModal(index, false);
+            alert("Recipe updated successfully!");
+        }
+    }
+
+    function closeRecipeModal(e) {
+        if (e.target.id === 'recipe-modal') {
+            document.getElementById('recipe-modal').classList.remove('active');
+        }
+    }
+
+    function closeRecipeModalForce() {
+        document.getElementById('recipe-modal').classList.remove('active');
+    }
+
+    function addNewRecipe() {
+        const name = document.getElementById('new-name').value.trim();
+        const timeVal = document.getElementById('new-time').value.trim();
+        const ingredientsRaw = document.getElementById('new-ingredients').value.trim();
+        const instructions = document.getElementById('new-instructions').value.trim();
+        const imageFile = document.getElementById('new-image').files[0];
+
+        if (!name || !ingredientsRaw) {
+            alert("Please provide at least a recipe name and ingredients!");
+            return;
+        }
+
+        const ingredients = ingredientsRaw.toLowerCase().split(',').map(i => i.trim()).filter(i => i);
+
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                recipes.push({ name, time: timeVal || '30 mins', ingredients, instructions, image: e.target.result, notes: "" });
+                saveStorage();
+                resetRecipeForm();
+                renderRecipes();
+                alert("Recipe saved successfully with cover image!");
+            };
+            reader.readAsDataURL(imageFile);
+        } else {
+            recipes.push({ name, time: timeVal || '30 mins', ingredients, instructions, image: "", notes: "" });
+            saveStorage();
+            resetRecipeForm();
+            renderRecipes();
+            alert("Recipe saved successfully!");
+        }
+    }
+
+    function resetRecipeForm() {
+        document.getElementById('new-name').value = '';
+        document.getElementById('new-time').value = '';
+        document.getElementById('new-ingredients').value = '';
+        document.getElementById('new-instructions').value = '';
+        document.getElementById('new-image').value = '';
+    }
+
+    // --- 3D INTERACTION LOGIC ---
+    function toggleMasterDoor(e) {
+        e.stopPropagation();
+        const door = document.getElementById('master-door');
+        const hint = document.getElementById('door-hint');
+        door.classList.toggle('open');
+        hint.style.display = door.classList.contains('open') ? 'none' : 'block';
+    }
+
+    function togglePantryDoor(e) {
+        e.stopPropagation();
+        const door = document.getElementById('pantry-door');
+        const hint = document.getElementById('pantry-hint');
+        door.classList.toggle('open');
+        hint.style.display = door.classList.contains('open') ? 'none' : 'block';
+    }
+
+    function toggleDrawer(drawerId, e) {
+        e.stopPropagation();
+        const drawer = document.getElementById(`drawer-${drawerId}`);
+        drawer.classList.toggle('pulled');
+    }
+
+    function addFridgeItem() {
+        const input = document.getElementById('grocery-input');
+        const shelf = document.getElementById('shelf-select').value;
+        const val = input.value.trim().toLowerCase();
+
+        if (!val) return;
+
+        let count = 1;
+        let itemName = val;
+        const match = val.match(/^(\d+)\s+(.+)$/);
+        if (match) {
+            count = parseInt(match[1], 10);
+            itemName = match[2].trim();
+        }
+
+        for (let i = 0; i < count; i++) {
+            fridgeItems.push({ id: Date.now() + Math.random(), name: itemName, shelf: shelf });
+        }
+
+        saveStorage();
+        input.value = '';
+        renderFridge();
+    }
+
+    function deleteFridgeItem(id) {
+        fridgeItems = fridgeItems.filter(item => item.id !== id);
+        saveStorage();
+        renderFridge();
+    }
+
+    // --- RENDER FRIDGE & PANTRY (COLORED DRAWINGS FOR ITEMS) ---
+    function renderFridge() {
+        const containerIds = [
+            'shelf-fridge-top', 'shelf-fridge-wire', 'shelf-fridge-mid',
+            'crisper1', 'crisper2',
+            'shelf-door1', 'shelf-door2', 'shelf-door3', 'shelf-door4',
+            'drawer-freezer1', 'drawer-freezer2', 'drawer-freezer3',
+            'shelf-pantry-top', 'shelf-pantry-spices', 'shelf-pantry-grains', 'shelf-pantry-cans'
+        ];
+
+        containerIds.forEach(id => {
+            const el = document.getElementById(id) || document.getElementById(`drawer-${id}`);
+            if (el) {
+                const label = el.querySelector('.shelf-label') || el.querySelector('.pantry-shelf-label') || el.querySelector('.bin-label');
+                el.innerHTML = '';
+                if (label) el.appendChild(label);
+            }
+        });
+
+        fridgeItems.forEach(item => {
+            let target = document.getElementById(item.shelf) || document.getElementById(`drawer-${item.shelf}`) || document.getElementById(`shelf-${item.shelf}`);
+            if (target) {
+                const node = document.createElement('div');
+                node.className = 'food-item-node';
+                node.title = item.name.toUpperCase();
+                
+                let svg = `<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="20" fill="#ec4899"/><path d="M22 32 L42 32 M32 22 L32 42" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/></svg>`;
+                const name = item.name.toLowerCase();
+                if (name.includes('apple')) svg = `<svg viewBox="0 0 64 64"><path d="M32 16 C22 12 16 24 16 36 C16 48 24 56 32 56 C40 56 48 48 48 36 C48 24 42 12 32 16 Z" fill="#ef4444"/><path d="M32 16 C32 8 36 4 40 2" stroke="#16a34a" stroke-width="3" stroke-linecap="round" fill="none"/></svg>`;
+                else if (name.includes('banana')) svg = `<svg viewBox="0 0 64 64"><path d="M16 48 C20 32 32 20 48 16 C46 26 38 40 24 50 C20 52 16 50 16 48 Z" fill="#facc15"/></svg>`;
+                else if (name.includes('salt')) svg = `<svg viewBox="0 0 64 64"><rect x="22" y="20" width="20" height="34" fill="#f8fafc" rx="4"/><ellipse cx="32" cy="20" rx="10" ry="4" fill="#cbd5e1"/></svg>`;
+                else if (name.includes('rice') || name.includes('flour') || name.includes('lentil')) svg = `<svg viewBox="0 0 64 64"><path d="M16 28 C16 20 48 20 48 28 L44 52 C44 56 38 58 32 58 C26 58 20 56 20 52 Z" fill="#f8fafc"/></svg>`;
+                else if (name.includes('oil')) svg = `<svg viewBox="0 0 64 64"><rect x="24" y="16" width="16" height="8" fill="#94a3b8" rx="2"/><path d="M22 24 L42 24 L46 56 C46 60 42 62 38 62 L26 62 C22 62 18 60 18 56 Z" fill="#facc15"/></svg>`;
+
+                node.innerHTML = `<div class="drawing-box">${svg}</div>`;
+                node.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteFridgeItem(item.id);
+                };
+                target.appendChild(node);
+            }
+        });
+    }
+
+    // --- SOUS CHEF LOGIC ---
+    function renderSousChef() {
+        const availableIngredients = [...new Set(fridgeItems.map(i => i.name.toLowerCase()))];
+        const possibleContainer = document.getElementById('possible-recipes-container');
+        
+        const possibleRecipes = recipes.filter(recipe => {
+            const missing = recipe.ingredients.filter(ing => !availableIngredients.some(a => ing.toLowerCase().includes(a) || a.includes(ing.toLowerCase())));
+            return missing.length === 0;
+        });
+
+        if (possibleRecipes.length === 0) {
+            possibleContainer.innerHTML = `<p style="color:var(--text-muted); text-align:center; padding:20px;">No recipes are fully possible right now with your current stock. Restock your fridge or pantry!</p>`;
+            return;
+        }
+
+        let html = '<div class="recipe-grid">';
+        possibleRecipes.forEach(recipe => {
+            const realIdx = recipes.indexOf(recipe);
+            const coverImg = recipe.image ? recipe.image : 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=600&q=80';
+            const timeText = recipe.time ? recipe.time : '30 mins';
+            const diet = getDietaryType(recipe.ingredients);
+            const dietClass = `diet-${diet}`;
+            const dietLabel = diet.toUpperCase();
+
+            html += `
+                <div class="recipe-card card-${diet}" onclick="openRecipeModal(${realIdx})">
+                    <img src="${coverImg}" class="recipe-cover" alt="${recipe.name}">
+                    <div class="recipe-body">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <h3 class="recipe-title">${recipe.name} <span class="match-badge">READY!</span></h3>
+                            <span class="diet-badge ${dietClass}">${dietLabel}</span>
+                        </div>
+                        <div class="recipe-meta">
+                            <span class="recipe-time-badge">⏱️ ${timeText}</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--accent); margin-bottom:8px;"><strong>Status:</strong> 100% Ready to Cook!</div>
+                        <div class="recipe-steps">${recipe.instructions}</div>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        possibleContainer.innerHTML = html;
+    }
+
+    function pickForMe() {
+        const availableIngredients = [...new Set(fridgeItems.map(i => i.name.toLowerCase()))];
+        const possibleRecipes = recipes.filter(recipe => {
+            const missing = recipe.ingredients.filter(ing => !availableIngredients.some(a => ing.toLowerCase().includes(a) || a.includes(ing.toLowerCase())));
+            return missing.length === 0;
+        });
+
+        const resultDiv = document.getElementById('random-pick-result');
+        if (possibleRecipes.length === 0) {
+            resultDiv.innerHTML = `<p style="color:var(--danger); font-weight:700; margin-top:15px;">No fully possible recipes found to pick from! Stock up your fridge or pantry first.</p>`;
+            return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * possibleRecipes.length);
+        const chosen = possibleRecipes[randomIndex];
+        const realIdx = recipes.indexOf(chosen);
+        const coverImg = chosen.image ? chosen.image : 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=600&q=80';
+        const timeText = chosen.time ? chosen.time : '30 mins';
+        const diet = getDietaryType(chosen.ingredients);
+
+        resultDiv.innerHTML = `
+            <div style="background: #0f172a; border: 2px solid var(--primary); border-radius: 12px; padding: 20px; text-align: left; max-width: 450px; margin: 15px auto 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+                <h3 style="color: var(--primary); margin-top:0; font-size:1.3rem; text-align:center;">🎉 The Sous Chef Recommends:</h3>
+                <div class="recipe-card card-${diet}" onclick="openRecipeModal(${realIdx})" style="cursor:pointer;">
+                    <img src="${coverImg}" class="recipe-cover" alt="${chosen.name}">
+                    <div class="recipe-body">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                            <h3 class="recipe-title">${chosen.name}</h3>
+                            <span class="diet-badge diet-${diet}">${diet.toUpperCase()}</span>
+                        </div>
+                        <div class="recipe-meta">
+                            <span class="recipe-time-badge">⏱️ ${timeText}</span>
+                        </div>
+                        <div class="recipe-steps">${chosen.instructions}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Initial boot
+    renderRecipes();
+    renderFridge();
+</script>
+
+</body>
+</html>
