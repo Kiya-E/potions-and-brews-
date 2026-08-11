@@ -420,7 +420,6 @@
             z-index: 2;
         }
 
-        /* Inside of door: restricted to height above freezer so bins stop correctly */
         .door-back {
             background: linear-gradient(135deg, #475569 0%, #334155 100%);
             border: 6px solid #64748b;
@@ -1055,7 +1054,7 @@
 </div>
 
 <script>
-    let recipes = JSON.parse(localStorage.getItem('wonderland_recipes_v4')) || [
+    let recipes = JSON.parse(localStorage.getItem('wonderland_recipes_v5')) || [
         { 
             name: "BEANSPROUTS", 
             time: "15 mins", 
@@ -1213,7 +1212,7 @@
     ];
 
     function saveStorage() {
-        localStorage.setItem('wonderland_recipes', JSON.stringify(recipes));
+        localStorage.setItem('wonderland_recipes_v5', JSON.stringify(recipes));
         localStorage.setItem('wonderland_fridge', JSON.stringify(fridgeItems));
     }
 
@@ -1521,6 +1520,27 @@
         renderFridge();
     }
 
+    // --- SMART INGREDIENT MATCHER (HANDLES PLURALS & PREVENTS FALSE MATCHES) ---
+    function ingredientMatches(availableItem, requiredIngredient) {
+        const cleanAvail = availableItem.toLowerCase().replace(/[^a-z\s]/g, '').split(/\s+/).filter(w => w.length > 0);
+        const cleanReq = requiredIngredient.toLowerCase()
+            .replace(/\[.*?\]/g, '')
+            .replace(/\b(one|two|three|four|five|six|seven|eight|nine|ten|half|1\/2|1\/3|2\/3|tin|can|of|some|fresh|frozen|kg|g|optional)\b/g, '')
+            .replace(/[^a-z\s]/g, '')
+            .split(/\s+/)
+            .filter(w => w.length > 0);
+
+        return cleanAvail.some(avWord => {
+            return cleanReq.some(reqWord => {
+                return avWord === reqWord || 
+                       avWord === reqWord + 's' || 
+                       avWord === reqWord + 'es' || 
+                       avWord + 's' === reqWord || 
+                       avWord + 'es' === reqWord;
+            });
+        });
+    }
+
     // --- RENDER SHELF CONTAINERS (JARS, BOWLS, BOXES, BOTTLES, TUBS) ---
     function renderFridge() {
         const containerIds = [
@@ -1579,11 +1599,11 @@
 
     // --- SOUS CHEF LOGIC ---
     function renderSousChef() {
-        const availableIngredients = [...new Set(fridgeItems.map(i => i.name.toLowerCase()))];
+        const availableIngredients = fridgeItems.map(i => i.name.toLowerCase());
         const possibleContainer = document.getElementById('possible-recipes-container');
         
         const possibleRecipes = recipes.filter(recipe => {
-            const missing = recipe.ingredients.filter(ing => !availableIngredients.some(a => ing.toLowerCase().includes(a) || a.includes(ing.toLowerCase())));
+            const missing = recipe.ingredients.filter(ing => !availableIngredients.some(a => ingredientMatches(a, ing)));
             return missing.length === 0;
         });
 
@@ -1623,9 +1643,9 @@
     }
 
     function pickForMe() {
-        const availableIngredients = [...new Set(fridgeItems.map(i => i.name.toLowerCase()))];
+        const availableIngredients = fridgeItems.map(i => i.name.toLowerCase());
         const possibleRecipes = recipes.filter(recipe => {
-            const missing = recipe.ingredients.filter(ing => !availableIngredients.some(a => ing.toLowerCase().includes(a) || a.includes(ing.toLowerCase())));
+            const missing = recipe.ingredients.filter(ing => !availableIngredients.some(a => ingredientMatches(a, ing)));
             return missing.length === 0;
         });
 
