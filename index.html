@@ -4,11 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>✨ Potions and Brews Masterbook & Kitchen</title>
-    
-    <!-- Firebase App & Firestore SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-
     <style>
         :root {
             --bg-color: #0f172a;
@@ -1092,6 +1087,21 @@
                 </div>
             </div>
         </div>
+
+        <!-- SYNC / BACKUP CARD FOR MULTI-DEVICE SUPPORT -->
+        <div class="card" style="text-align: center; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+            <h2>🌐 Multi-Device Backup & Restore</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">
+                Use these buttons to export or import your fridge inventory and custom recipes as a backup file between devices!
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <button class="action-btn" style="max-width: 250px; background: var(--secondary);" onclick="exportAppData()">💾 Export App Data (Backup)</button>
+                <label class="action-btn" style="max-width: 250px; background: var(--accent); display: inline-block; cursor: pointer; line-height: normal; padding: 12px 20px; box-sizing: border-box;">
+                    📂 Import App Data (Restore)
+                    <input type="file" id="import-file" accept=".json" style="display: none;" onchange="importAppData(event)">
+                </label>
+            </div>
+        </div>
     </div>
 
     <!-- TAB 3: SOUS CHEF -->
@@ -1119,22 +1129,17 @@
 </div>
 
 <script>
-    // --- FIREBASE CONFIGURATION ---
-    const firebaseConfig = {
-        apiKey: "AIzaSyBuEH_AWfYeHxUNGV6nSInKqvXgdlMETlc",
-        authDomain: "brews-and-potions.firebaseapp.com",
-        projectId: "brews-and-potions",
-        storageBucket: "brews-and-potions.firebasestorage.app",
-        messagingSenderId: "457118780956",
-        appId: "1:457118780956:web:2980d589c2b2a173c619d9",
-        measurementId: "G-PS2QT6BY7P"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    let recipes = [
+    // --- LOCAL STORAGE RECOVERY WITH FALLBACK CHAIN ---
+    let recipes = JSON.parse(localStorage.getItem('wonderland_recipes_v13')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes_v12')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes_v11')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes_v10')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes_v9')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes_v8')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes_v7')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes_v6')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes_v5')) || 
+                  JSON.parse(localStorage.getItem('wonderland_recipes')) || [
         { 
             name: "BEANSPROUTS", 
             time: "15 mins", 
@@ -1298,7 +1303,16 @@
         }
     ];
 
-    let fridgeItems = [
+    let fridgeItems = JSON.parse(localStorage.getItem('wonderland_fridge_v13')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge_v12')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge_v11')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge_v10')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge_v9')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge_v8')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge_v7')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge_v6')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge_v5')) || 
+                      JSON.parse(localStorage.getItem('wonderland_fridge')) || [
         { id: 1, name: "oil", shelf: "fridge-top" },
         { id: 2, name: "apple", shelf: "crisper1" },
         { id: 3, name: "banana", shelf: "crisper1" },
@@ -1308,28 +1322,9 @@
         { id: 7, name: "flour", shelf: "pantry-grains" }
     ];
 
-    // --- REAL-TIME CLOUD SYNC WITH FIRESTORE ---
-    const docRef = db.collection('kitchen').doc('masterData');
-
-    docRef.onSnapshot((doc) => {
-        if (doc.exists) {
-            const data = doc.data();
-            if (data.recipes) recipes = data.recipes;
-            if (data.fridgeItems) fridgeItems = data.fridgeItems;
-            renderRecipes();
-            renderFridge();
-        } else {
-            saveStorage();
-        }
-    });
-
     function saveStorage() {
-        docRef.set({
-            recipes: recipes,
-            fridgeItems: fridgeItems
-        }).catch((error) => {
-            console.error("Error saving to Firestore: ", error);
-        });
+        localStorage.setItem('wonderland_recipes_v13', JSON.stringify(recipes));
+        localStorage.setItem('wonderland_fridge_v13', JSON.stringify(fridgeItems));
     }
 
     function switchTab(tabId) {
@@ -1741,6 +1736,45 @@
         fridgeItems = fridgeItems.filter(item => item.id !== id);
         saveStorage();
         renderFridge();
+    }
+
+    // --- EXPORT & IMPORT DATA (FOR MULTI-DEVICE SYNC) ---
+    function exportAppData() {
+        const appData = {
+            recipes: recipes,
+            fridgeItems: fridgeItems
+        };
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", "potions-and-brews-backup.json");
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+    }
+
+    function importAppData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const parsed = JSON.parse(e.target.result);
+                if (parsed.recipes && parsed.fridgeItems) {
+                    recipes = parsed.recipes;
+                    fridgeItems = parsed.fridgeItems;
+                    saveStorage();
+                    renderRecipes();
+                    renderFridge();
+                    alert("App data successfully restored from backup!");
+                } else {
+                    alert("Invalid backup file format.");
+                }
+            } catch (err) {
+                alert("Error reading backup file.");
+            }
+        };
+        reader.readAsText(file);
     }
 
     // --- RENDER SHELF CONTAINERS (JARS, BOWLS, BOXES, BOTTLES, TUBS) ---
